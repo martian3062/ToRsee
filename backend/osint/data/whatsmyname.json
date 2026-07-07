@@ -1,0 +1,29 @@
+{
+  "license": "Curated subset in the WhatsMyName schema (per-site match/no-match signatures).",
+  "sites": [
+    {"name": "GitHub", "cat": "coding", "uri_check": "https://github.com/{account}", "e_code": 200, "e_string": "\"login\":\"{account}\"", "m_code": 404, "m_string": "Not Found"},
+    {"name": "GitLab", "cat": "coding", "uri_check": "https://gitlab.com/{account}", "e_code": 200, "e_string": "@{account}", "m_code": 404, "m_string": "not found"},
+    {"name": "Reddit", "cat": "social", "uri_check": "https://www.reddit.com/user/{account}/about.json", "e_code": 200, "e_string": "\"name\": \"{account}\"", "m_code": 404, "m_string": "error"},
+    {"name": "Instagram", "cat": "social", "uri_check": "https://www.instagram.com/{account}/", "e_code": 200, "e_string": "profilePage", "m_code": 404, "m_string": "Page Not Found"},
+    {"name": "Medium", "cat": "blog", "uri_check": "https://medium.com/@{account}", "e_code": 200, "e_string": "@{account}", "m_code": 404, "m_string": "PAGE NOT FOUND"},
+    {"name": "DockerHub", "cat": "coding", "uri_check": "https://hub.docker.com/u/{account}", "e_code": 200, "e_string": "Docker Hub", "m_code": 404, "m_string": "Page not found"},
+    {"name": "Keybase", "cat": "coding", "uri_check": "https://keybase.io/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Not Found"},
+    {"name": "HackerNews", "cat": "news", "uri_check": "https://news.ycombinator.com/user?id={account}", "e_code": 200, "e_string": "user:", "m_code": 200, "m_string": "No such user."},
+    {"name": "PyPI", "cat": "coding", "uri_check": "https://pypi.org/user/{account}/", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "not found"},
+    {"name": "NPM", "cat": "coding", "uri_check": "https://www.npmjs.com/~{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Not found"},
+    {"name": "Twitch", "cat": "gaming", "uri_check": "https://m.twitch.tv/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Sorry. Unless"},
+    {"name": "Telegram", "cat": "chat", "uri_check": "https://t.me/{account}", "e_code": 200, "e_string": "tgme_page_title", "m_code": 200, "m_string": "If you have Telegram"},
+    {"name": "Steam", "cat": "gaming", "uri_check": "https://steamcommunity.com/id/{account}", "e_code": 200, "e_string": "profile_header", "m_code": 200, "m_string": "The specified profile could not be found"},
+    {"name": "Patreon", "cat": "financial", "uri_check": "https://www.patreon.com/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Page not found"},
+    {"name": "Pastebin", "cat": "coding", "uri_check": "https://pastebin.com/u/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Not Found"},
+    {"name": "SoundCloud", "cat": "music", "uri_check": "https://soundcloud.com/{account}", "e_code": 200, "e_string": "soundcloud://users", "m_code": 404, "m_string": "not found"},
+    {"name": "Vimeo", "cat": "video", "uri_check": "https://vimeo.com/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Page not found"},
+    {"name": "About.me", "cat": "social", "uri_check": "https://about.me/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Page Not Found"},
+    {"name": "Gravatar", "cat": "social", "uri_check": "https://gravatar.com/{account}", "e_code": 200, "e_string": "profile", "m_code": 404, "m_string": "not found"},
+    {"name": "Replit", "cat": "coding", "uri_check": "https://replit.com/@{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "not found"},
+    {"name": "Kaggle", "cat": "coding", "uri_check": "https://www.kaggle.com/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Page Not Found"},
+    {"name": "TryHackMe", "cat": "security", "uri_check": "https://tryhackme.com/p/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "not found"},
+    {"name": "Chess.com", "cat": "gaming", "uri_check": "https://www.chess.com/member/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "cannot be found"},
+    {"name": "Last.fm", "cat": "music", "uri_check": "https://www.last.fm/user/{account}", "e_code": 200, "e_string": "{account}", "m_code": 404, "m_string": "Page Not Found"}
+  ]
+}
