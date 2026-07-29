@@ -1117,7 +1117,7 @@ export default function Home() {
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm flex flex-col">
               <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-2">
                 <div className="flex items-center gap-2">
-                  <ShieldAlert className="h-5 w-5 text-red-650" />
+                  <ShieldAlert className="h-5 w-5 text-red-700" />
                   <h2 className="text-lg font-semibold">OONI Probe Censorship Incident Logs</h2>
                 </div>
                 <span className="bg-red-100 text-red-950 font-bold px-2 py-0.5 rounded text-[10px]">CENSORSHIP ALERTING</span>
@@ -1144,7 +1144,7 @@ export default function Home() {
                         <td className="px-3 py-2.5">
                           <span className="bg-amber-100 text-amber-900 border border-amber-200 font-semibold px-2 py-0.5 rounded text-[10px]">{inc.anomaly_type}</span>
                         </td>
-                        <td className="px-3 py-2.5 text-right font-mono font-bold text-red-650">{(inc.failure_rate * 100).toFixed(0)}%</td>
+                        <td className="px-3 py-2.5 text-right font-mono font-bold text-red-700">{(inc.failure_rate * 100).toFixed(0)}%</td>
                       </tr>
                     ))}
                     {incidents.length === 0 && (

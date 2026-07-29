@@ -22,7 +22,20 @@ def test_health_endpoint(api_client):
     response = api_client.get("/api/health")
     assert response.status_code == 200
     assert response.data["status"] == "ok"
+    assert response.data["database"]["engine"] in {"sqlite", "postgresql"}
+    assert isinstance(response.data["database"]["extensions"], list)
     assert response.data["providers"]
+
+
+@pytest.mark.django_db
+def test_openapi_schema_endpoint(api_client):
+    response = api_client.get("/api/schema/")
+
+    assert response.status_code == 200
+    assert response["Content-Type"].startswith(
+        ("application/vnd.oai.openapi", "application/yaml")
+    )
+    assert b"ToRsy API" in response.content
 
 
 @pytest.mark.django_db

@@ -1,4 +1,5 @@
 import pytest
+from asgiref.sync import async_to_sync
 from django.utils import timezone
 from rest_framework.test import APIClient
 
@@ -167,3 +168,27 @@ def test_repeated_censorship_result_is_not_duplicated(api_client, settings):
 
     assert CensorshipIncident.objects.count() == 1
     assert AlertEvent.objects.filter(event_type=AlertRule.EventType.CENSORSHIP).count() == 1
+
+
+@pytest.mark.django_db(transaction=True)
+def test_monitoring_event_stream_emits_state_cursor(api_client):
+    MonitoredTarget.objects.create(
+        kind=MonitoredTarget.Kind.USERNAME,
+        value="live_user",
+        interval=300,
+    )
+
+    response = api_client.get("/api/osint/events/stream/?once=1")
+
+    if hasattr(response.streaming_content, "__aiter__"):
+        async def consume_stream():
+            return b"".join([chunk async for chunk in response.streaming_content])
+
+        content = async_to_sync(consume_stream)()
+    else:
+        content = b"".join(response.streaming_content)
+    assert response.status_code == 200
+    assert response["Content-Type"] == "text/event-stream"
+    assert b"event: monitoring" in content
+    assert b'"targets":1' in content
+    assert b'"enabled_targets":1' in content

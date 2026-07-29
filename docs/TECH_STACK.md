@@ -4,9 +4,9 @@
 
 ToRsy is a monorepo with a Django API backend, a Next.js dashboard, and local Docker Compose infrastructure.
 
-- `backend/`: Django 5.2 LTS, Django REST Framework, Celery, Redis, pytest.
-- `frontend/`: Next.js App Router, TypeScript, Tailwind CSS, lucide-react icons.
-- `infra/`: local Postgres and Redis.
+- `backend/`: managed Python 3.12, Django 5.2 LTS, DRF, Celery, Redis, pytest.
+- `frontend/`: Next.js 16, React 19, TanStack Query, TypeScript, Tailwind CSS 4.
+- `infra/`: PostgreSQL 18 with TimescaleDB/PostGIS/pgvector, Redis, and Tor.
 - `scripts/use-e-cache.ps1`: pins Python venv, package caches, and model caches to `E:\cache\ToRsy`.
 
 The backend defaults to `PROVIDER_MOCK_MODE=true`, so the whole pipeline works without spending paid API credits.
@@ -20,16 +20,20 @@ The backend defaults to `PROVIDER_MOCK_MODE=true`, so the whole pipeline works w
 5. Content is stored as a `Document`; Groq creates a summary; Hugging Face-style embeddings are generated.
 6. Pinecone receives vectors when configured; otherwise local search is used.
 7. Telegram sends a job-complete message when configured; otherwise a mock send result is recorded.
+8. Monitoring state changes are emitted over SSE and invalidate the browser's TanStack Query cache.
 
 ## API Surface
 
 - `GET /api/health`: database, Redis, and provider readiness.
+- `GET /api/schema/`: generated OpenAPI 3 schema.
+- `GET /api/docs/`: interactive API documentation.
 - `GET /api/jobs/`: latest ingestion jobs with targets and documents.
 - `GET /api/jobs/{id}`: one job with target details.
 - `POST /api/jobs/ingest`: body `{ urls, provider_preference, tags, notify }`.
 - `POST /api/search`: body `{ query, top_k }`; returns Pinecone matches and local document matches.
 - `POST /api/ai/summarize`: body `{ text }` or `{ document_ids }`.
 - `POST /api/telegram/webhook`: Telegram Bot API update payload.
+- `GET /api/osint/events/stream/`: monitoring Server-Sent Events.
 
 ## Provider Roles
 
@@ -74,6 +78,7 @@ This sets:
 - `HF_HOME=E:\cache\ToRsy\hf`
 - `TORCH_HOME=E:\cache\ToRsy\torch`
 - `TRANSFORMERS_CACHE=E:\cache\ToRsy\transformers`
+- `UV_PYTHON=3.12`
 
 ## Local Runbook
 
@@ -105,8 +110,14 @@ If `8000` is already occupied, run Django on another port such as `8025` and set
 .\scripts\use-e-cache.ps1
 cd backend
 uv run pytest
+uv run python manage.py spectacular --file ..\docs\openapi.yaml --validate
 cd ..\frontend
+npm run api:types
+npm run typecheck
 npm run build
+npm audit
 ```
 
-The first verification pass should show provider statuses as `mocked` unless keys are present.
+GitHub Actions repeats these contract, test, and production-build gates on pushes and
+pull requests. The first verification pass should show provider statuses as `mocked`
+unless keys are present.

@@ -18,4 +18,5 @@ dist/
 build/
 coverage/
 *.log
+*.tsbuildinfo
 infra/data/

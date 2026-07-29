@@ -1,6 +1,8 @@
 from rest_framework import status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema
 
 from .models import (
     AlertEvent,
@@ -45,6 +47,7 @@ class OSINTScanViewSet(viewsets.ModelViewSet):
 
 
 class CensorshipIncidentListView(views.APIView):
+    @extend_schema(responses=CensorshipIncidentSerializer(many=True))
     def get(self, request, *args, **kwargs):
         incidents = CensorshipIncident.objects.all()[:50]
         return Response(CensorshipIncidentSerializer(incidents, many=True).data)
@@ -53,10 +56,12 @@ class CensorshipIncidentListView(views.APIView):
 class RelayAnomalyListView(views.APIView):
     """GET flagged relay anomalies; POST { search } to (re)run the monitor."""
 
+    @extend_schema(responses=RelayAnomalySerializer(many=True))
     def get(self, request, *args, **kwargs):
         anomalies = RelayAnomaly.objects.all()[:100]
         return Response(RelayAnomalySerializer(anomalies, many=True).data)
 
+    @extend_schema(request=OpenApiTypes.OBJECT, responses=OpenApiTypes.OBJECT)
     def post(self, request, *args, **kwargs):
         search = request.data.get("search", "")
         summary = run_relay_monitor_task(search)

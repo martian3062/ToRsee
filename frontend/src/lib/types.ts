@@ -1,3 +1,14 @@
+import type {
+  AlertEventSeverityEnum,
+  EventTypeEnum,
+  JobTargetStatusEnum,
+  MonitoredTargetKindEnum,
+  ProcessingStatusEnum,
+  RelayAnomalySeverityEnum,
+  ScanTypeEnum,
+  SourceTypeEnum,
+} from "./openapi/types.gen";
+
 export type ProviderState = {
   key: string;
   label: string;
@@ -20,7 +31,7 @@ export type DocumentRecord = {
 export type JobTarget = {
   id: number;
   url: string;
-  status: "queued" | "fetched" | "failed";
+  status: JobTargetStatusEnum;
   fetched_with: string;
   document: DocumentRecord | null;
   error: string;
@@ -30,7 +41,7 @@ export type JobTarget = {
 
 export type IngestionJob = {
   id: string;
-  status: "queued" | "running" | "completed" | "failed";
+  status: ProcessingStatusEnum;
   provider_preference: string[];
   tags: string[];
   notification_settings: Record<string, unknown>;
@@ -46,6 +57,10 @@ export type IngestionJob = {
 export type HealthPayload = {
   status: string;
   checks: Record<string, string>;
+  database: {
+    engine: "sqlite" | "postgresql" | string;
+    extensions: string[];
+  };
   providers: ProviderState[];
 };
 
@@ -61,8 +76,8 @@ export type SearchMatch = {
 export type OSINTScan = {
   id: number;
   target: string;
-  scan_type: "username" | "domain" | "metadata" | "tor_relay";
-  status: "queued" | "running" | "completed" | "failed";
+  scan_type: ScanTypeEnum;
+  status: ProcessingStatusEnum;
   error: string;
   results: Record<string, any>;
   created_at: string;
@@ -92,7 +107,7 @@ export type RelayAnomaly = {
   metric: string;
   anomaly_type: string;
   score: number;
-  severity: "low" | "medium" | "high";
+  severity: RelayAnomalySeverityEnum;
   detector: string;
   detail: Record<string, any>;
   detected_at: string;
@@ -102,7 +117,7 @@ export type DarkWebCrawl = {
   id: number;
   url: string;
   keywords: string;
-  status: "queued" | "running" | "completed" | "failed";
+  status: ProcessingStatusEnum;
   routed_via_tor: boolean;
   is_onion: boolean;
   error: string;
@@ -113,7 +128,7 @@ export type DarkWebCrawl = {
 
 export type MonitoredTarget = {
   id: number;
-  kind: "username" | "domain" | "ooni" | "tor_relay" | "onion";
+  kind: MonitoredTargetKindEnum;
   value: string;
   interval: number;
   enabled: boolean;
@@ -126,7 +141,7 @@ export type MonitoredTarget = {
 
 export type Snapshot = {
   id: number;
-  source_type: "username" | "crawl";
+  source_type: SourceTypeEnum;
   target: string;
   content_hash: string;
   changed: boolean;
@@ -141,7 +156,7 @@ export type Snapshot = {
 export type AlertRule = {
   id: number;
   name: string;
-  event_type: "relay_anomaly" | "censorship" | "keyword_hit" | "change";
+  event_type: EventTypeEnum;
   conditions: Record<string, unknown>;
   enabled: boolean;
   monitored_target: number | null;
@@ -157,7 +172,7 @@ export type AlertEvent = {
   rule_name: string;
   monitored_target: number | null;
   event_type: AlertRule["event_type"];
-  severity: "info" | "medium" | "high";
+  severity: AlertEventSeverityEnum;
   title: string;
   message: string;
   payload: Record<string, unknown>;

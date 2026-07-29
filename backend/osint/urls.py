@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from .events import MonitoringEventStreamView
 from .views import (
     AlertEventViewSet,
     AlertRuleViewSet,
@@ -22,6 +23,7 @@ router.register("alert-events", AlertEventViewSet, basename="osint-alert-event")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("events/stream/", MonitoringEventStreamView.as_view(), name="monitoring-events"),
     path("censorship/", CensorshipIncidentListView.as_view(), name="censorship-list"),
     path("anomalies/", RelayAnomalyListView.as_view(), name="relay-anomalies"),
 ]

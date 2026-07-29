@@ -47,12 +47,13 @@ plus native tables and meters.
 
 ## Stack
 
-- **Backend:** Django 5.2 LTS, Django REST Framework, Celery, Redis, pytest.
+- **Backend:** Python 3.12, Django 5.2 LTS, Django REST Framework, Celery, Redis, pytest.
 - **Anomaly / ML:** PyOD v3, scikit-learn, numpy, scipy.
 - **OSINT libs:** stem, dnspython, exifread, beautifulsoup4, httpx + socksio (SOCKS5).
-- **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, lucide-react.
+- **Frontend:** Next.js 16, React 19, TypeScript, TanStack Query, Tailwind CSS 4, lucide-react.
 - **Visualization:** reagraph (WebGL graph), maplibre-gl (vector maps).
-- **Infra:** Docker Compose for Postgres, Redis, and a Tor SOCKS proxy (`dperson/torproxy`, ports 9050/9051).
+- **API contract:** drf-spectacular OpenAPI schema + generated TypeScript declarations.
+- **Infra:** PostgreSQL 18 with TimescaleDB, PostGIS, and pgvector; Redis; Tor SOCKS proxy.
 - **Providers (pluggable, all mockable):** Telegram, Groq, Hugging Face, Firecrawl, ZenRows, Bright Data, TinyFish, Pinecone, Supabase, Sarvam, TabPFN, Pexels.
 
 ---
@@ -96,7 +97,7 @@ graph TD
     end
 
     Backend --> DB[(Postgres / SQLite)]
-    Frontend -->|fetch JSON| Backend
+    Frontend -->|REST + monitoring SSE| Backend
 ```
 
 ---
@@ -202,6 +203,8 @@ incident is written instead of fabricating live-looking data.
 | Method       | Endpoint                   | Body / notes                                                        |
 | :----------- | :------------------------- | :------------------------------------------------------------------ |
 | `GET`      | `/api/health`            | DB, Redis, provider readiness                                       |
+| `GET`      | `/api/schema/`           | generated OpenAPI 3 contract                                        |
+| `GET`      | `/api/docs/`             | interactive Swagger UI                                              |
 | `GET`      | `/api/jobs/`             | latest ingestion jobs + targets + documents                         |
 | `GET`      | `/api/jobs/{id}`         | one job                                                             |
 | `POST`     | `/api/jobs/ingest`       | `{ urls, provider_preference, tags, notify }`                     |
@@ -217,6 +220,7 @@ incident is written instead of fabricating live-looking data.
 | `GET`      | `/api/osint/snapshots/`  | crawl and username baselines + structured diffs                       |
 | `GET/POST` | `/api/osint/alert-rules/` | exact, `min_`, `max_`, keyword, and `_contains` conditions        |
 | `GET`      | `/api/osint/alert-events/` | auditable Telegram delivery log                                      |
+| `GET`      | `/api/osint/events/stream/` | live monitoring cache-invalidation stream (SSE)                    |
 | `POST`     | `/api/telegram/webhook`  | Telegram Bot update (`/status`, `/search`, `/summarize`)      |
 
 ---
@@ -242,9 +246,9 @@ incident is written instead of fabricating live-looking data.
 ```powershell
 Copy-Item .env.example .env
 .\scripts\use-e-cache.ps1                       # pin venv + caches to E:\cache\ToRsy
-docker compose -f infra/docker-compose.yml up -d # Postgres + Redis + Tor proxy
+docker compose -f infra/docker-compose.yml up -d # PostgreSQL 18 + Redis + Tor proxy
 cd backend
-uv sync --dev
+uv sync --locked --dev                         # managed Python 3.12 under E:\cache
 uv run python manage.py migrate
 uv run python manage.py runserver 127.0.0.1:8000
 ```
@@ -273,7 +277,12 @@ uv run celery -A config beat --loglevel=info
 
 Beat checks once per minute and dispatches only targets whose stored interval has
 elapsed. The dashboard also offers **Run now**, pause/resume controls, snapshot diffs,
-rule management, and the alert delivery log.
+rule management, and the alert delivery log. TanStack Query refreshes those views from
+the SSE stream, with a 30-second polling fallback if the stream is interrupted.
+
+The PostgreSQL container initializes TimescaleDB, PostGIS, and pgvector in a dedicated
+`torsy_pg18_data` volume. `GET /api/health` reports the active database engine and
+installed extensions. SQLite remains the zero-infrastructure test/demo fallback.
 
 If `8000` is occupied, run Django on another port and start Next with:
 
@@ -292,7 +301,7 @@ Copy `.env.example` to `.env` and set keys only for providers you want live.
 | :--------------------------- | :---------------------------- | :---------------------------------------------------- |
 | `PROVIDER_MOCK_MODE`       | `true`                      | mock all provider + live scan calls                   |
 | `CELERY_TASK_ALWAYS_EAGER` | `true`                      | run Celery tasks in-process locally                   |
-| `DATABASE_URL`             | SQLite fallback               | `postgres://torosee:torosee@127.0.0.1:5432/torosee` |
+| `DATABASE_URL`             | SQLite fallback               | `postgres://torsy:torsy@127.0.0.1:5432/torsy`       |
 | `REDIS_URL`                | `redis://127.0.0.1:6379/0`  | Celery broker                                         |
 | `NEXT_PUBLIC_API_BASE_URL` | `http://127.0.0.1:8000/api` | frontend → backend                                   |
 
@@ -313,9 +322,13 @@ censorship pulls the real OONI API.
 .\scripts\use-e-cache.ps1
 cd backend
 uv run ruff check .
-uv run pytest            # 17 tests, including monitoring, diffs, rules, alerts, and dedupe
+uv run python manage.py spectacular --file ..\docs\openapi.yaml --validate
+uv run pytest            # 19 tests, including SSE, schema, monitoring, rules, and dedupe
 cd ..\frontend
-npm run build            # type-checks + compiles
+npm run api:types        # refresh the typed SDK/query bindings from the backend contract
+npm run typecheck
+npm run build
+npm audit                # expected: 0 vulnerabilities
 ```
 
 ---
@@ -333,18 +346,23 @@ backend/
     anomaly.py       PyOD TimeSeriesOD engine + z-score fallback
     whatsmyname.py   concurrent per-site username enumeration
     crawler.py       Tor SOCKS crawler (httpx + BeautifulSoup)
+    events.py        ASGI-friendly monitoring Server-Sent Events stream
     data/whatsmyname.json   curated site signatures
     views.py / serializers.py / urls.py
   jobs/ ai/ integrations/ sources/ reports/ config/
 frontend/
   src/app/page.tsx           6-tab dashboard
-  src/components/monitoring-panel.tsx  schedules, rules, snapshots, delivery log
-  src/app/layout.tsx         root + extension-error guard
+  src/components/monitoring-panel.tsx  TanStack Query monitoring cockpit
+  src/components/app-providers.tsx     shared query cache + devtools
+  src/hooks/use-monitoring-stream.ts   SSE invalidation + reconnect state
+  src/app/layout.tsx         root providers + extension-error guard
   src/components/footprint-graph.tsx   Reagraph WebGL graph
   src/components/relay-map.tsx          MapLibre anomaly map
-  src/lib/{api,types,demo}.ts
-infra/docker-compose.yml     Postgres + Redis + Tor proxy
-docs/TECH_STACK.md, docs/osint_extension_proposal.md
+  src/lib/openapi/              generated SDK, types, and TanStack Query bindings
+  src/lib/{api,types,query-keys,demo}.ts
+infra/docker-compose.yml     PostgreSQL 18 extensions + Redis + Tor proxy
+docs/openapi.yaml            generated API contract
+.github/workflows/ci.yml     backend and frontend contract/build gates
 ```
 
 ---

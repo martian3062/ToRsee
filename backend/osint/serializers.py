@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.utils import timezone
 from rest_framework import serializers
@@ -135,7 +135,7 @@ class MonitoredTargetSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Config must be a JSON object.")
         return value
 
-    def get_next_run(self, obj):
+    def get_next_run(self, obj) -> datetime | None:
         if not obj.enabled:
             return None
         if obj.last_run is None:

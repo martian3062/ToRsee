@@ -1,0 +1,1799 @@
+openapi: 3.0.3
+info:
+  title: ToRsy API
+  version: 1.0.0
+  description: OSINT, Tor network intelligence, monitoring, and alerting API.
+paths:
+  /api/ai/status:
+    get:
+      operationId: ai_status_retrieve
+      tags:
+      - ai
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/ai/summarize:
+    post:
+      operationId: ai_summarize_create
+      tags:
+      - ai
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummarizeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SummarizeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SummarizeRequest'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummarizeResponse'
+          description: ''
+  /api/health:
+    get:
+      operationId: health_retrieve
+      tags:
+      - health
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/jobs/:
+    get:
+      operationId: jobs_list
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IngestionJob'
+          description: ''
+  /api/jobs/{id}:
+    get:
+      operationId: jobs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestionJob'
+          description: ''
+  /api/jobs/ingest:
+    post:
+      operationId: jobs_ingest
+      tags:
+      - jobs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestionJob'
+          description: ''
+  /api/osint/alert-events/:
+    get:
+      operationId: osint_alert_events_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertEvent'
+          description: ''
+  /api/osint/alert-events/{id}/:
+    get:
+      operationId: osint_alert_events_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alert event.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertEvent'
+          description: ''
+  /api/osint/alert-rules/:
+    get:
+      operationId: osint_alert_rules_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertRule'
+          description: ''
+    post:
+      operationId: osint_alert_rules_create
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertRule'
+          description: ''
+  /api/osint/alert-rules/{id}/:
+    get:
+      operationId: osint_alert_rules_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alert rule.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertRule'
+          description: ''
+    put:
+      operationId: osint_alert_rules_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alert rule.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertRule'
+          description: ''
+    patch:
+      operationId: osint_alert_rules_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alert rule.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAlertRule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAlertRule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAlertRule'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertRule'
+          description: ''
+    delete:
+      operationId: osint_alert_rules_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alert rule.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/osint/anomalies/:
+    get:
+      operationId: osint_anomalies_list
+      description: GET flagged relay anomalies; POST { search } to (re)run the monitor.
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RelayAnomaly'
+          description: ''
+    post:
+      operationId: osint_anomalies_create
+      description: GET flagged relay anomalies; POST { search } to (re)run the monitor.
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/osint/censorship/:
+    get:
+      operationId: osint_censorship_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CensorshipIncident'
+          description: ''
+  /api/osint/crawl/:
+    get:
+      operationId: osint_crawl_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DarkWebCrawl'
+          description: ''
+    post:
+      operationId: osint_crawl_create
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarkWebCrawl'
+          description: ''
+  /api/osint/crawl/{id}/:
+    get:
+      operationId: osint_crawl_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dark web crawl.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarkWebCrawl'
+          description: ''
+    put:
+      operationId: osint_crawl_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dark web crawl.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DarkWebCrawl'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarkWebCrawl'
+          description: ''
+    patch:
+      operationId: osint_crawl_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dark web crawl.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDarkWebCrawl'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDarkWebCrawl'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDarkWebCrawl'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarkWebCrawl'
+          description: ''
+    delete:
+      operationId: osint_crawl_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dark web crawl.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/osint/monitors/:
+    get:
+      operationId: osint_monitors_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+    post:
+      operationId: osint_monitors_create
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+  /api/osint/monitors/{id}/:
+    get:
+      operationId: osint_monitors_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this monitored target.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+    put:
+      operationId: osint_monitors_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this monitored target.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+    patch:
+      operationId: osint_monitors_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this monitored target.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMonitoredTarget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMonitoredTarget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMonitoredTarget'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+    delete:
+      operationId: osint_monitors_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this monitored target.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/osint/monitors/{id}/run/:
+    post:
+      operationId: osint_monitors_run_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this monitored target.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MonitoredTarget'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoredTarget'
+          description: ''
+  /api/osint/scan/:
+    get:
+      operationId: osint_scan_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OSINTScan'
+          description: ''
+    post:
+      operationId: osint_scan_create
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSINTScan'
+          description: ''
+  /api/osint/scan/{id}/:
+    get:
+      operationId: osint_scan_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this osint scan.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSINTScan'
+          description: ''
+    put:
+      operationId: osint_scan_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this osint scan.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OSINTScan'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSINTScan'
+          description: ''
+    patch:
+      operationId: osint_scan_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this osint scan.
+        required: true
+      tags:
+      - osint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOSINTScan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOSINTScan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOSINTScan'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSINTScan'
+          description: ''
+    delete:
+      operationId: osint_scan_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this osint scan.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/osint/snapshots/:
+    get:
+      operationId: osint_snapshots_list
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Snapshot'
+          description: ''
+  /api/osint/snapshots/{id}/:
+    get:
+      operationId: osint_snapshots_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this snapshot.
+        required: true
+      tags:
+      - osint
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snapshot'
+          description: ''
+  /api/search:
+    post:
+      operationId: search_create
+      tags:
+      - search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/telegram/webhook:
+    post:
+      operationId: telegram_webhook_create
+      tags:
+      - telegram
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    AlertEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rule:
+          type: integer
+          nullable: true
+        rule_name:
+          type: string
+          readOnly: true
+          default: ''
+        monitored_target:
+          type: integer
+          nullable: true
+        event_type:
+          $ref: '#/components/schemas/EventTypeEnum'
+        severity:
+          $ref: '#/components/schemas/AlertEventSeverityEnum'
+        title:
+          type: string
+          maxLength: 256
+        message:
+          type: string
+        payload: {}
+        delivered:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - event_type
+      - id
+      - message
+      - rule_name
+      - title
+    AlertEventSeverityEnum:
+      enum:
+      - info
+      - medium
+      - high
+      type: string
+      description: |-
+        * `info` - Info
+        * `medium` - Medium
+        * `high` - High
+    AlertRule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 128
+        event_type:
+          $ref: '#/components/schemas/EventTypeEnum'
+        conditions: {}
+        enabled:
+          type: boolean
+        monitored_target:
+          type: integer
+          nullable: true
+        cooldown_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        last_triggered:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - event_type
+      - id
+      - last_triggered
+      - name
+      - updated_at
+    CensorshipIncident:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        country_code:
+          type: string
+          maxLength: 8
+        asn:
+          type: string
+          maxLength: 32
+        target_domain:
+          type: string
+          maxLength: 512
+        anomaly_type:
+          type: string
+          maxLength: 128
+        measurement_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        failure_rate:
+          type: number
+          format: double
+        reported_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - anomaly_type
+      - asn
+      - country_code
+      - id
+      - reported_at
+      - target_domain
+    DarkWebCrawl:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          maxLength: 1024
+        keywords:
+          type: string
+          maxLength: 512
+        monitored_target:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ProcessingStatusEnum'
+          readOnly: true
+        routed_via_tor:
+          type: boolean
+          readOnly: true
+        is_onion:
+          type: boolean
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        results:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - error
+      - id
+      - is_onion
+      - monitored_target
+      - results
+      - routed_via_tor
+      - status
+      - updated_at
+      - url
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        source:
+          allOf:
+          - $ref: '#/components/schemas/Source'
+          readOnly: true
+        url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 2048
+          - type: string
+            maxLength: 0
+        title:
+          type: string
+          maxLength: 512
+        content_markdown:
+          type: string
+        metadata: {}
+        embedding_id:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - source
+    EventTypeEnum:
+      enum:
+      - relay_anomaly
+      - censorship
+      - keyword_hit
+      - change
+      type: string
+      description: |-
+        * `relay_anomaly` - Relay anomaly
+        * `censorship` - Censorship incident
+        * `keyword_hit` - Crawler keyword hit
+        * `change` - Snapshot change
+    IngestRequest:
+      type: object
+      properties:
+        urls:
+          type: array
+          items:
+            type: string
+            format: uri
+            maxLength: 2048
+          maxItems: 25
+          minItems: 1
+        provider_preference:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderPreferenceEnum'
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+        notify:
+          type: boolean
+          default: true
+        telegram_chat_id:
+          type: string
+          maxLength: 128
+      required:
+      - urls
+    IngestionJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/ProcessingStatusEnum'
+        provider_preference: {}
+        tags: {}
+        notification_settings: {}
+        error:
+          type: string
+        cost_metadata: {}
+        result_metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobTarget'
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - targets
+      - updated_at
+    JobTarget:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 2048
+        status:
+          $ref: '#/components/schemas/JobTargetStatusEnum'
+        fetched_with:
+          type: string
+          maxLength: 64
+        document:
+          allOf:
+          - $ref: '#/components/schemas/Document'
+          readOnly: true
+        error:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - document
+      - id
+      - updated_at
+      - url
+    JobTargetStatusEnum:
+      enum:
+      - queued
+      - fetched
+      - failed
+      type: string
+      description: |-
+        * `queued` - Queued
+        * `fetched` - Fetched
+        * `failed` - Failed
+    MonitoredTarget:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/MonitoredTargetKindEnum'
+        value:
+          type: string
+          maxLength: 1024
+        interval:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Seconds between scheduled checks.
+        enabled:
+          type: boolean
+        config: {}
+        last_run:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        next_run:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - kind
+      - last_run
+      - next_run
+      - updated_at
+      - value
+    MonitoredTargetKindEnum:
+      enum:
+      - username
+      - domain
+      - ooni
+      - tor_relay
+      - onion
+      type: string
+      description: |-
+        * `username` - Username
+        * `domain` - Domain
+        * `ooni` - OONI domain
+        * `tor_relay` - Tor relay
+        * `onion` - Onion URL
+    OSINTScan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        target:
+          type: string
+          maxLength: 512
+        scan_type:
+          $ref: '#/components/schemas/ScanTypeEnum'
+        monitored_target:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ProcessingStatusEnum'
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        results:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - error
+      - id
+      - monitored_target
+      - results
+      - scan_type
+      - status
+      - target
+      - updated_at
+    PatchedAlertRule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 128
+        event_type:
+          $ref: '#/components/schemas/EventTypeEnum'
+        conditions: {}
+        enabled:
+          type: boolean
+        monitored_target:
+          type: integer
+          nullable: true
+        cooldown_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        last_triggered:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedDarkWebCrawl:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          maxLength: 1024
+        keywords:
+          type: string
+          maxLength: 512
+        monitored_target:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ProcessingStatusEnum'
+          readOnly: true
+        routed_via_tor:
+          type: boolean
+          readOnly: true
+        is_onion:
+          type: boolean
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        results:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedMonitoredTarget:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/MonitoredTargetKindEnum'
+        value:
+          type: string
+          maxLength: 1024
+        interval:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Seconds between scheduled checks.
+        enabled:
+          type: boolean
+        config: {}
+        last_run:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        next_run:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedOSINTScan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        target:
+          type: string
+          maxLength: 512
+        scan_type:
+          $ref: '#/components/schemas/ScanTypeEnum'
+        monitored_target:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ProcessingStatusEnum'
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        results:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    ProcessingStatusEnum:
+      enum:
+      - queued
+      - running
+      - completed
+      - failed
+      type: string
+      description: |-
+        * `queued` - Queued
+        * `running` - Running
+        * `completed` - Completed
+        * `failed` - Failed
+    ProviderPreferenceEnum:
+      enum:
+      - firecrawl
+      - zenrows
+      - bright_data
+      - tinyfish
+      - direct
+      type: string
+      description: |-
+        * `firecrawl` - firecrawl
+        * `zenrows` - zenrows
+        * `bright_data` - bright_data
+        * `tinyfish` - tinyfish
+        * `direct` - direct
+    RelayAnomaly:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        fingerprint:
+          type: string
+          maxLength: 64
+        nickname:
+          type: string
+          maxLength: 64
+        country_code:
+          type: string
+          maxLength: 8
+        country_name:
+          type: string
+          maxLength: 64
+        as_number:
+          type: string
+          maxLength: 32
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        metric:
+          type: string
+          maxLength: 32
+        anomaly_type:
+          type: string
+          maxLength: 64
+        score:
+          type: number
+          format: double
+        severity:
+          $ref: '#/components/schemas/RelayAnomalySeverityEnum'
+        detector:
+          type: string
+          maxLength: 32
+        detail: {}
+        detected_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - detected_at
+      - fingerprint
+      - id
+    RelayAnomalySeverityEnum:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+      description: |-
+        * `low` - Low
+        * `medium` - Medium
+        * `high` - High
+    ScanTypeEnum:
+      enum:
+      - username
+      - domain
+      - metadata
+      - tor_relay
+      type: string
+      description: |-
+        * `username` - Username Search
+        * `domain` - Domain Attack Surface
+        * `metadata` - Document OpSec Analyzer
+        * `tor_relay` - Tor Network Anomaly
+    SearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          maxLength: 500
+        top_k:
+          type: integer
+          maximum: 25
+          minimum: 1
+          default: 8
+      required:
+      - query
+    Snapshot:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        target:
+          type: string
+          maxLength: 1024
+        content_hash:
+          type: string
+          maxLength: 64
+        changed:
+          type: boolean
+        diff: {}
+        monitored_target:
+          type: integer
+          nullable: true
+        osint_scan:
+          type: integer
+          nullable: true
+        darkweb_crawl:
+          type: integer
+          nullable: true
+        previous:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - content_hash
+      - created_at
+      - id
+      - source_type
+      - target
+    Source:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/SourceKindEnum'
+        value:
+          type: string
+        tags: {}
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - value
+    SourceKindEnum:
+      enum:
+      - url
+      - search
+      - manual
+      type: string
+      description: |-
+        * `url` - URL
+        * `search` - Search
+        * `manual` - Manual
+    SourceTypeEnum:
+      enum:
+      - username
+      - crawl
+      type: string
+      description: |-
+        * `username` - Username scan
+        * `crawl` - Web crawl
+    SummarizeRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        document_ids:
+          type: array
+          items:
+            type: integer
+        prompt:
+          type: string
+          default: ''
+    SummarizeResponse:
+      type: object
+      properties:
+        summary:
+          type: string
+        provider:
+          type: string
+        model:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+      required:
+      - metadata
+      - model
+      - provider
+      - summary
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

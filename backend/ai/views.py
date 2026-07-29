@@ -1,6 +1,8 @@
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, inline_serializer
 
 from ai.providers import GroqSummarizer, SarvamSpeechService, TabPFNService
 from reports.models import SummaryReport
@@ -19,6 +21,18 @@ class SummarizeRequestSerializer(serializers.Serializer):
 
 
 class SummarizeView(APIView):
+    @extend_schema(
+        request=SummarizeRequestSerializer,
+        responses=inline_serializer(
+            name="SummarizeResponse",
+            fields={
+                "summary": serializers.CharField(),
+                "provider": serializers.CharField(),
+                "model": serializers.CharField(),
+                "metadata": serializers.DictField(),
+            },
+        ),
+    )
     def post(self, request):
         serializer = SummarizeRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -53,6 +67,7 @@ class SummarizeView(APIView):
 
 
 class AIStatusView(APIView):
+    @extend_schema(responses=OpenApiTypes.OBJECT)
     def get(self, request):
         return Response(
             {

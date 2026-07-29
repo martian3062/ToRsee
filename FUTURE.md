@@ -20,7 +20,10 @@ Already shipped and verified:
 - Reagraph footprint graph + MapLibre anomaly map.
 - Continuous monitoring with Celery Beat, snapshot diffs, alert rules, and Telegram
   delivery audit.
-- 17 backend tests green, frontend builds clean.
+- Live monitoring updates over SSE with TanStack Query caching and polling fallback.
+- Python 3.12, Tailwind CSS 4, generated OpenAPI/TypeScript contracts, and a
+  PostgreSQL 18 extension-ready local stack.
+- 19 backend tests green, frontend builds clean, and GitHub Actions enforces both.
 
 The roadmap below extends from that baseline.
 
@@ -125,7 +128,8 @@ more than a local demo.
 - 🟡 **Ethics & legality guardrails.** Consent/authorization prompts, a target allowlist,
   and clear "authorized use only" gating for live mode.
 - 🟢 **Structured logging + Sentry** for the Celery tasks.
-- 🟡 **CI pipeline** (GitHub Actions): pytest + ruff + `next build` + type-check on PR.
+- ✅ **CI pipeline.** GitHub Actions runs pytest, ruff, migration/schema drift checks,
+  generated TypeScript contract drift, type-checking, and `next build`.
 - 🟡 **Deployment.** Containerize backend + frontend; a `docker-compose.prod.yml`;
   Netlify/Vercel for the frontend (connectors available in this environment).
 
@@ -139,7 +143,8 @@ more than a local demo.
 - 🟢 **Export** — per-investigation JSON/CSV/PDF report download.
 - 🟢 **Rename cleanup.** Propagate **ToRsy** into `package.json` / `pyproject.toml`
   metadata and (optionally) service/DB names; today only docs + UI title are renamed.
-- 🟢 **Live status.** WebSocket/SSE so long scans update the UI without manual refresh.
+- ✅ **Live status.** SSE invalidates the TanStack Query monitoring cache immediately;
+  automatic reconnect and 30-second polling cover interrupted streams.
 
 ---
 

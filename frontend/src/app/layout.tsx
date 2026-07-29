@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+import { AppProviders } from "@/components/app-providers";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en">
       <body>
         <script dangerouslySetInnerHTML={{ __html: suppressExtensionErrors }} />
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

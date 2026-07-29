@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
   BellRing,
@@ -10,8 +10,11 @@ import {
   Play,
   Plus,
   Radar,
+  Radio,
 } from "lucide-react";
+import { useState, type FormEvent } from "react";
 
+import { useMonitoringStream } from "@/hooks/use-monitoring-stream";
 import {
   createAlertRule,
   createMonitoredTarget,
@@ -23,7 +26,8 @@ import {
   updateAlertRule,
   updateMonitoredTarget,
 } from "@/lib/api";
-import type { AlertEvent, AlertRule, MonitoredTarget, Snapshot } from "@/lib/types";
+import { monitoringKeys } from "@/lib/query-keys";
+import type { AlertRule, MonitoredTarget } from "@/lib/types";
 
 const targetKinds: Array<{ value: MonitoredTarget["kind"]; label: string }> = [
   { value: "username", label: "Username re-check" },
@@ -58,10 +62,35 @@ function when(value: string | null): string {
 }
 
 export function MonitoringPanel() {
-  const [targets, setTargets] = useState<MonitoredTarget[]>([]);
-  const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
-  const [rules, setRules] = useState<AlertRule[]>([]);
-  const [events, setEvents] = useState<AlertEvent[]>([]);
+  const queryClient = useQueryClient();
+  const streamStatus = useMonitoringStream();
+  const queryOptions = {
+    refetchInterval: 30_000,
+  };
+  const targetsQuery = useQuery({
+    queryKey: monitoringKeys.targets,
+    queryFn: getMonitoredTargets,
+    ...queryOptions,
+  });
+  const snapshotsQuery = useQuery({
+    queryKey: monitoringKeys.snapshots,
+    queryFn: getSnapshots,
+    ...queryOptions,
+  });
+  const rulesQuery = useQuery({
+    queryKey: monitoringKeys.rules,
+    queryFn: getAlertRules,
+    ...queryOptions,
+  });
+  const eventsQuery = useQuery({
+    queryKey: monitoringKeys.events,
+    queryFn: getAlertEvents,
+    ...queryOptions,
+  });
+  const targets = targetsQuery.data ?? [];
+  const snapshots = snapshotsQuery.data ?? [];
+  const rules = rulesQuery.data ?? [];
+  const events = eventsQuery.data ?? [];
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
 
@@ -76,22 +105,16 @@ export function MonitoringPanel() {
   const [ruleTarget, setRuleTarget] = useState("");
   const [cooldown, setCooldown] = useState(60);
 
-  async function refresh() {
-    const [nextTargets, nextSnapshots, nextRules, nextEvents] = await Promise.all([
-      getMonitoredTargets(),
-      getSnapshots(),
-      getAlertRules(),
-      getAlertEvents(),
-    ]);
-    setTargets(nextTargets);
-    setSnapshots(nextSnapshots);
-    setRules(nextRules);
-    setEvents(nextEvents);
-  }
+  const queryError = [
+    targetsQuery.error,
+    snapshotsQuery.error,
+    rulesQuery.error,
+    eventsQuery.error,
+  ].find(Boolean);
 
-  useEffect(() => {
-    refresh().catch(() => setMessage("Monitoring API is unavailable until migrations are applied."));
-  }, []);
+  async function refresh() {
+    await queryClient.invalidateQueries({ queryKey: monitoringKeys.all });
+  }
 
   async function submitTarget(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -178,9 +201,24 @@ export function MonitoringPanel() {
 
   return (
     <div className="flex flex-col gap-5">
-      {message ? (
+      <div className="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
+        <span>30-second polling fallback is active.</span>
+        <span
+          className={`inline-flex items-center gap-1.5 font-bold uppercase ${
+            streamStatus === "live" ? "text-emerald-700" : "text-amber-700"
+          }`}
+        >
+          <Radio className={`h-3.5 w-3.5 ${streamStatus === "live" ? "animate-pulse" : ""}`} />
+          {streamStatus === "live" ? "live SSE" : streamStatus}
+        </span>
+      </div>
+
+      {message || queryError ? (
         <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
-          {message}
+          {message ||
+            (queryError instanceof Error
+              ? queryError.message
+              : "Monitoring API is unavailable until migrations are applied.")}
         </div>
       ) : null}
 

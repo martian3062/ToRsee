@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #18212f;
+  --color-field: #f7f9fb;
+  --color-signal: #0f9b8e;
+  --color-amberline: #d98634;
+  --shadow-panel: 0 16px 40px rgba(23, 31, 45, 0.08);
+}
 
 :root {
   color-scheme: light;

@@ -23,7 +23,7 @@ foreach ($path in $paths) {
 
 $env:UV_PROJECT_ENVIRONMENT = Join-Path $projectCache ".venv"
 $env:UV_CACHE_DIR = Join-Path $projectCache "uv"
-$env:UV_PYTHON = "3.10"
+$env:UV_PYTHON = "3.12"
 $env:UV_PYTHON_INSTALL_DIR = Join-Path $projectCache "python"
 $env:UV_MANAGED_PYTHON = "1"
 $env:PIP_CACHE_DIR = Join-Path $projectCache "pip"
