@@ -8,10 +8,14 @@ from django.utils import timezone
 
 from config.celery import app
 
+from .alerts import emit_alert
 from .anomaly import score_relays
 from .crawler import crawl as tor_crawl
 from .crawler import is_onion
+from .monitoring import record_snapshot
 from .models import (
+    AlertEvent,
+    AlertRule,
     CensorshipIncident,
     DarkWebCrawl,
     OSINTScan,
@@ -46,12 +50,20 @@ def run_osint_scan_task(scan_id: int):
         scan.status = OSINTScan.Status.COMPLETED
         scan.save(update_fields=["results", "status", "updated_at"])
 
+        if scan.scan_type == OSINTScan.ScanType.USERNAME:
+            record_snapshot(
+                source_type="username",
+                target=scan.target,
+                payload=results,
+                monitored_target=scan.monitored_target,
+                osint_scan=scan,
+            )
         # A relay scan also refreshes the monitored time-series + anomaly scores.
         if scan.scan_type == OSINTScan.ScanType.TOR_RELAY:
-            run_relay_monitor_task(scan.target)
+            run_relay_monitor_task(scan.target, scan.monitored_target_id)
         # A domain scan checks OONI for real censorship signals against that domain.
         if scan.scan_type == OSINTScan.ScanType.DOMAIN:
-            refresh_censorship_for_domain(scan.target)
+            refresh_censorship_for_domain(scan.target, scan.monitored_target_id)
 
     except Exception as exc:
         logger.exception("OSINT scan failed")
@@ -272,7 +284,7 @@ def _fetch_onionoo_observations(search_term: str) -> list[dict]:
     return obs
 
 
-def run_relay_monitor_task(search_term: str = "") -> dict:
+def run_relay_monitor_task(search_term: str = "", monitored_target_id: int | None = None) -> dict:
     """Ingest relay time-series, run PyOD anomaly detection, persist anomalies."""
     if settings.PROVIDER_MOCK_MODE:
         observations = _build_mock_observations(search_term)
@@ -303,12 +315,101 @@ def run_relay_monitor_task(search_term: str = "") -> dict:
     # Refresh anomaly records for this relay set.
     RelayAnomaly.objects.filter(fingerprint__in=fps).delete()
     for a in anomalies:
-        RelayAnomaly.objects.create(**a)
+        anomaly = RelayAnomaly.objects.create(**a)
+        if anomaly.severity == RelayAnomaly.Severity.HIGH:
+            payload = {
+                "anomaly_id": anomaly.id,
+                "fingerprint": anomaly.fingerprint,
+                "nickname": anomaly.nickname,
+                "country_code": anomaly.country_code,
+                "as_number": anomaly.as_number,
+                "anomaly_type": anomaly.anomaly_type,
+                "metric": anomaly.metric,
+                "score": anomaly.score,
+                "severity": anomaly.severity,
+                "detail": anomaly.detail,
+            }
+            emit_alert(
+                event_type=AlertRule.EventType.RELAY_ANOMALY,
+                title=f"High-severity relay anomaly: {anomaly.nickname or anomaly.fingerprint[:8]}",
+                message=(
+                    f"{anomaly.anomaly_type.replace('_', ' ')} in "
+                    f"{anomaly.as_number or anomaly.country_code or 'unknown network'} "
+                    f"(score {anomaly.score:.2f})."
+                ),
+                payload=payload,
+                severity=AlertEvent.Severity.HIGH,
+                source_key=(
+                    f"relay:{anomaly.fingerprint}:{anomaly.anomaly_type}:"
+                    f"{anomaly.detected_at:%Y%m%d%H}"
+                ),
+                monitored_target_id=monitored_target_id,
+                force=True,
+            )
 
     return {"observations": len(observations), "anomalies": len(anomalies)}
 
 
-def refresh_censorship_for_domain(domain: str) -> None:
+def _create_censorship_incident(
+    *,
+    domain: str,
+    country_code: str,
+    asn: str,
+    anomaly_type: str,
+    measurement_count: int,
+    failure_rate: float,
+    monitored_target_id: int | None,
+) -> bool:
+    recent_cutoff = timezone.now() - timedelta(hours=24)
+    duplicate = CensorshipIncident.objects.filter(
+        country_code=country_code,
+        asn=asn,
+        target_domain=domain,
+        anomaly_type=anomaly_type,
+        measurement_count=measurement_count,
+        failure_rate=failure_rate,
+        reported_at__gte=recent_cutoff,
+    ).exists()
+    if duplicate:
+        return False
+
+    incident = CensorshipIncident.objects.create(
+        country_code=country_code,
+        asn=asn,
+        target_domain=domain,
+        anomaly_type=anomaly_type,
+        measurement_count=measurement_count,
+        failure_rate=failure_rate,
+    )
+    emit_alert(
+        event_type=AlertRule.EventType.CENSORSHIP,
+        title=f"New censorship signal for {domain}",
+        message=(
+            f"{anomaly_type} in {country_code}"
+            f"{f' / {asn}' if asn else ''}: {failure_rate:.0%} anomaly rate "
+            f"across {measurement_count} measurements."
+        ),
+        payload={
+            "incident_id": incident.id,
+            "country_code": country_code,
+            "asn": asn,
+            "target_domain": domain,
+            "anomaly_type": anomaly_type,
+            "measurement_count": measurement_count,
+            "failure_rate": failure_rate,
+        },
+        severity=AlertEvent.Severity.HIGH if failure_rate >= 0.5 else AlertEvent.Severity.MEDIUM,
+        source_key=f"censorship:{incident.id}",
+        monitored_target_id=monitored_target_id,
+        force=True,
+    )
+    return True
+
+
+def refresh_censorship_for_domain(
+    domain: str,
+    monitored_target_id: int | None = None,
+) -> int:
     """Query OONI for real web_connectivity anomalies against the domain.
 
     In mock mode (or when OONI is unreachable) we record a clearly-labelled
@@ -327,28 +428,32 @@ def refresh_censorship_for_domain(domain: str) -> None:
                 measurements = g.get("measurement_count", 0) or 0
                 anomalies = g.get("anomaly_count", 0) or 0
                 if measurements and anomalies and anomalies / measurements > 0.2:
-                    CensorshipIncident.objects.create(
-                        country_code=g.get("probe_cc", "??"),
-                        asn="",
-                        target_domain=domain,
-                        anomaly_type="web_connectivity anomaly (OONI)",
-                        measurement_count=measurements,
-                        failure_rate=round(anomalies / measurements, 3),
+                    created += int(
+                        _create_censorship_incident(
+                            domain=domain,
+                            country_code=g.get("probe_cc", "??"),
+                            asn="",
+                            anomaly_type="web_connectivity anomaly (OONI)",
+                            measurement_count=measurements,
+                            failure_rate=round(anomalies / measurements, 3),
+                            monitored_target_id=monitored_target_id,
+                        )
                     )
-                    created += 1
-            if created:
-                return
+            return created
         except Exception as exc:
             logger.warning("OONI fetch failed: %s", exc)
 
     # Demo fallback — explicitly labelled so it is not mistaken for live data.
-    CensorshipIncident.objects.create(
-        country_code="IR",
-        asn="AS12880",
-        target_domain=domain,
-        anomaly_type="DNS Tampering (demo)",
-        measurement_count=145,
-        failure_rate=0.92,
+    return int(
+        _create_censorship_incident(
+            domain=domain,
+            country_code="IR",
+            asn="AS12880",
+            anomaly_type="DNS Tampering (demo)",
+            measurement_count=145,
+            failure_rate=0.92,
+            monitored_target_id=monitored_target_id,
+        )
     )
 
 
@@ -384,6 +489,38 @@ def run_darkweb_crawl_task(crawl_id: int):
         if results.get("error"):
             record.error = results["error"]
         record.save()
+
+        if record.status == DarkWebCrawl.Status.COMPLETED:
+            snapshot = record_snapshot(
+                source_type="crawl",
+                target=record.url,
+                payload=results,
+                monitored_target=record.monitored_target,
+                darkweb_crawl=record,
+            )
+            keyword_hits = {
+                keyword: int(count)
+                for keyword, count in (results.get("keyword_hits") or {}).items()
+                if int(count) > 0
+            }
+            if keyword_hits and (snapshot.previous_id is None or snapshot.changed):
+                emit_alert(
+                    event_type=AlertRule.EventType.KEYWORD_HIT,
+                    title=f"Watched keyword found at {record.url}",
+                    message=", ".join(
+                        f"{keyword}: {count}" for keyword, count in keyword_hits.items()
+                    ),
+                    payload={
+                        "crawl_id": record.id,
+                        "target": record.url,
+                        "keyword_hits": keyword_hits,
+                        "snapshot_id": snapshot.id,
+                    },
+                    severity=AlertEvent.Severity.HIGH,
+                    source_key=f"crawl-keywords:{snapshot.id}",
+                    monitored_target=record.monitored_target,
+                    force=True,
+                )
     except Exception as exc:
         logger.exception("crawl failed")
         record.status = DarkWebCrawl.Status.FAILED

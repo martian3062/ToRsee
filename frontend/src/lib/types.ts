@@ -111,3 +111,56 @@ export type DarkWebCrawl = {
   updated_at: string;
 };
 
+export type MonitoredTarget = {
+  id: number;
+  kind: "username" | "domain" | "ooni" | "tor_relay" | "onion";
+  value: string;
+  interval: number;
+  enabled: boolean;
+  config: Record<string, unknown>;
+  last_run: string | null;
+  next_run: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Snapshot = {
+  id: number;
+  source_type: "username" | "crawl";
+  target: string;
+  content_hash: string;
+  changed: boolean;
+  diff: Record<string, unknown>;
+  monitored_target: number | null;
+  osint_scan: number | null;
+  darkweb_crawl: number | null;
+  previous: number | null;
+  created_at: string;
+};
+
+export type AlertRule = {
+  id: number;
+  name: string;
+  event_type: "relay_anomaly" | "censorship" | "keyword_hit" | "change";
+  conditions: Record<string, unknown>;
+  enabled: boolean;
+  monitored_target: number | null;
+  cooldown_minutes: number;
+  last_triggered: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AlertEvent = {
+  id: number;
+  rule: number | null;
+  rule_name: string;
+  monitored_target: number | null;
+  event_type: AlertRule["event_type"];
+  severity: "info" | "medium" | "high";
+  title: string;
+  message: string;
+  payload: Record<string, unknown>;
+  delivered: boolean;
+  created_at: string;
+};

@@ -12,6 +12,7 @@ metadata leaks, dark-web mentions) in one dashboard.
 ---
 
 ## Table of contents
+
 - [Capabilities](#capabilities)
 - [Stack](#stack)
 - [High-level architecture](#high-level-architecture)
@@ -27,16 +28,17 @@ metadata leaks, dark-web mentions) in one dashboard.
 
 ## Capabilities
 
-| Domain | Module | What it does | Engine |
-| :-- | :-- | :-- | :-- |
-| **Ingest & Search** | Web ingestion | Fetch → normalize → summarize → embed → index → alert | Firecrawl / ZenRows / Bright Data / TinyFish / Groq / HF / Pinecone |
-| **Identity** | Username footprint | Enumerate a handle across 24+ platforms with per-site match/no-match signatures | WhatsMyName-style ruleset |
-| **Identity** | Domain attack surface | DNS records + HTTP security-header audit | dnspython / httpx |
-| **OpSec** | Metadata auditor | EXIF/GPS/author leaks from images & documents | exifread |
-| **Network** | Tor relay scan | Live relay consensus lookup | Onionoo |
-| **Network** | **Relay anomaly detection** | Per-relay bandwidth/consensus time-series scored for spikes, collapses, and drop-offs | **PyOD v3 `TimeSeriesOD`** |
-| **Network** | Censorship cockpit | Web-connectivity anomalies by country/ASN | OONI Aggregation API |
-| **Dark web** | Onion crawler | Crawl `.onion`/clearnet through the Tor SOCKS proxy, extract text/links/keyword hits | httpx + BeautifulSoup over `socks5h://` |
+| Domain                    | Module                            | What it does                                                                          | Engine                                                              |
+| :------------------------ | :-------------------------------- | :------------------------------------------------------------------------------------ | :------------------------------------------------------------------ |
+| **Ingest & Search** | Web ingestion                     | Fetch → normalize → summarize → embed → index → alert                            | Firecrawl / ZenRows / Bright Data / TinyFish / Groq / HF / Pinecone |
+| **Identity**        | Username footprint                | Enumerate a handle across 24+ platforms with per-site match/no-match signatures       | WhatsMyName-style ruleset                                           |
+| **Identity**        | Domain attack surface             | DNS records + HTTP security-header audit                                              | dnspython / httpx                                                   |
+| **OpSec**           | Metadata auditor                  | EXIF/GPS/author leaks from images & documents                                         | exifread                                                            |
+| **Network**         | Tor relay scan                    | Live relay consensus lookup                                                           | Onionoo                                                             |
+| **Network**         | **Relay anomaly detection** | Per-relay bandwidth/consensus time-series scored for spikes, collapses, and drop-offs | **PyOD v3 `TimeSeriesOD`**                                  |
+| **Network**         | Censorship cockpit                | Web-connectivity anomalies by country/ASN                                             | OONI Aggregation API                                                |
+| **Dark web**        | Onion crawler                     | Crawl`.onion`/clearnet through the Tor SOCKS proxy, extract text/links/keyword hits | httpx + BeautifulSoup over`socks5h://`                            |
+| **Monitoring**      | Continuous watch + alerts         | Re-run targets on a cadence, diff snapshots, evaluate rules, and fan alerts to Telegram | Celery Beat / Django / SHA-256                                      |
 
 Visualization: **Reagraph** (WebGL footprint graph), **MapLibre GL** (relay/anomaly geo-map),
 plus native tables and meters.
@@ -102,6 +104,7 @@ graph TD
 ## Module data flows
 
 ### 1. Web ingestion & semantic search
+
 ```mermaid
 sequenceDiagram
     participant UI as Dashboard
@@ -123,6 +126,7 @@ sequenceDiagram
 ```
 
 ### 2. Username footprint (WhatsMyName)
+
 ```mermaid
 sequenceDiagram
     participant UI as OSINT Scanner
@@ -141,6 +145,7 @@ sequenceDiagram
 ```
 
 ### 3. Tor relay anomaly detection (PyOD)
+
 ```mermaid
 sequenceDiagram
     participant UI as Relay Anomalies tab
@@ -159,11 +164,13 @@ sequenceDiagram
     MON->>DB: persist RelayAnomaly (geo + severity)
     API-->>UI: anomalies → MapLibre markers + table
 ```
+
 Fallback: if PyOD/the scientific stack is unavailable or a relay has too few
 samples, a robust median/MAD **z-score** is used instead (reported in the
 `detector` field).
 
 ### 4. Dark-web / onion crawl
+
 ```mermaid
 sequenceDiagram
     participant UI as Dark Web Crawler tab
@@ -181,6 +188,7 @@ sequenceDiagram
 ```
 
 ### 5. Censorship cockpit (OONI)
+
 A `domain` scan triggers `refresh_censorship_for_domain`, which queries the OONI
 Aggregation API for `web_connectivity` anomalies grouped by `probe_cc`, records any
 country/ASN whose anomaly rate exceeds 20%, and renders them as an incident table
@@ -191,34 +199,41 @@ incident is written instead of fabricating live-looking data.
 
 ## API surface
 
-| Method | Endpoint | Body / notes |
-| :-- | :-- | :-- |
-| `GET` | `/api/health` | DB, Redis, provider readiness |
-| `GET` | `/api/jobs/` | latest ingestion jobs + targets + documents |
-| `GET` | `/api/jobs/{id}` | one job |
-| `POST` | `/api/jobs/ingest` | `{ urls, provider_preference, tags, notify }` |
-| `POST` | `/api/search` | `{ query, top_k }` → vector + local matches |
-| `POST` | `/api/ai/summarize` | `{ text }` or `{ document_ids }` |
-| `GET/POST` | `/api/osint/scan/` | `{ target, scan_type }` — `username\|domain\|metadata\|tor_relay` |
-| `GET` | `/api/osint/censorship/` | OONI censorship incidents |
-| `GET` | `/api/osint/anomalies/` | flagged relay anomalies |
-| `POST` | `/api/osint/anomalies/` | `{ search }` → run PyOD monitor, return summary + anomalies |
-| `GET/POST` | `/api/osint/crawl/` | `{ url, keywords }` — Tor-routed crawl |
-| `POST` | `/api/telegram/webhook` | Telegram Bot update (`/status`, `/search`, `/summarize`) |
+| Method       | Endpoint                   | Body / notes                                                        |
+| :----------- | :------------------------- | :------------------------------------------------------------------ |
+| `GET`      | `/api/health`            | DB, Redis, provider readiness                                       |
+| `GET`      | `/api/jobs/`             | latest ingestion jobs + targets + documents                         |
+| `GET`      | `/api/jobs/{id}`         | one job                                                             |
+| `POST`     | `/api/jobs/ingest`       | `{ urls, provider_preference, tags, notify }`                     |
+| `POST`     | `/api/search`            | `{ query, top_k }` → vector + local matches                      |
+| `POST`     | `/api/ai/summarize`      | `{ text }` or `{ document_ids }`                                |
+| `GET/POST` | `/api/osint/scan/`       | `{ target, scan_type }` — `username\|domain\|metadata\|tor_relay` |
+| `GET`      | `/api/osint/censorship/` | OONI censorship incidents                                           |
+| `GET`      | `/api/osint/anomalies/`  | flagged relay anomalies                                             |
+| `POST`     | `/api/osint/anomalies/`  | `{ search }` → run PyOD monitor, return summary + anomalies      |
+| `GET/POST` | `/api/osint/crawl/`      | `{ url, keywords }` — Tor-routed crawl                           |
+| `GET/POST` | `/api/osint/monitors/`   | scheduled username/domain/OONI/relay/onion targets                    |
+| `POST`     | `/api/osint/monitors/{id}/run/` | dispatch one target immediately                             |
+| `GET`      | `/api/osint/snapshots/`  | crawl and username baselines + structured diffs                       |
+| `GET/POST` | `/api/osint/alert-rules/` | exact, `min_`, `max_`, keyword, and `_contains` conditions        |
+| `GET`      | `/api/osint/alert-events/` | auditable Telegram delivery log                                      |
+| `POST`     | `/api/telegram/webhook`  | Telegram Bot update (`/status`, `/search`, `/summarize`)      |
 
 ---
 
 ## Data model
 
-| App | Model | Purpose |
-| :-- | :-- | :-- |
-| `sources` | `Source` | origin metadata |
-| `jobs` | `IngestionJob`, `JobTarget`, `Document` | ingestion pipeline + parsed content |
-| `osint` | `OSINTScan` | username/domain/metadata/relay scan record |
-| `osint` | `CensorshipIncident` | OONI web-connectivity anomaly |
-| `osint` | `RelayObservation` | per-relay metric time-series row |
-| `osint` | `RelayAnomaly` | PyOD-scored anomaly (geo + severity + detector) |
-| `osint` | `DarkWebCrawl` | Tor-routed crawl result |
+| App         | Model                                         | Purpose                                         |
+| :---------- | :-------------------------------------------- | :---------------------------------------------- |
+| `sources` | `Source`                                    | origin metadata                                 |
+| `jobs`    | `IngestionJob`, `JobTarget`, `Document` | ingestion pipeline + parsed content             |
+| `osint`   | `OSINTScan`                                 | username/domain/metadata/relay scan record      |
+| `osint`   | `CensorshipIncident`                        | OONI web-connectivity anomaly                   |
+| `osint`   | `RelayObservation`                          | per-relay metric time-series row                |
+| `osint`   | `RelayAnomaly`                              | PyOD-scored anomaly (geo + severity + detector) |
+| `osint`   | `DarkWebCrawl`                              | Tor-routed crawl result                         |
+| `osint`   | `MonitoredTarget`, `Snapshot`               | scheduled watches + change history              |
+| `osint`   | `AlertRule`, `AlertEvent`                   | rule filters + delivery audit                   |
 
 ---
 
@@ -247,6 +262,19 @@ Open **http://localhost:3000** (backend at **http://127.0.0.1:8000**). Provider 
 run in mock mode by default. For no-Docker smoke tests, leave `DATABASE_URL` unset and
 Django falls back to SQLite.
 
+For continuous monitoring outside eager local mode, set
+`CELERY_TASK_ALWAYS_EAGER=false`, then run the worker and Beat in separate backend
+terminals:
+
+```powershell
+uv run celery -A config worker --pool=solo --loglevel=info
+uv run celery -A config beat --loglevel=info
+```
+
+Beat checks once per minute and dispatches only targets whose stored interval has
+elapsed. The dashboard also offers **Run now**, pause/resume controls, snapshot diffs,
+rule management, and the alert delivery log.
+
 If `8000` is occupied, run Django on another port and start Next with:
 
 ```powershell
@@ -260,13 +288,13 @@ npm run dev -- --hostname 127.0.0.1 --port 3000
 
 Copy `.env.example` to `.env` and set keys only for providers you want live.
 
-| Var | Default | Meaning |
-| :-- | :-- | :-- |
-| `PROVIDER_MOCK_MODE` | `true` | mock all provider + live scan calls |
-| `CELERY_TASK_ALWAYS_EAGER` | `true` | run Celery tasks in-process locally |
-| `DATABASE_URL` | SQLite fallback | `postgres://torsy:torsy@127.0.0.1:5432/torsy` |
-| `REDIS_URL` | `redis://127.0.0.1:6379/0` | Celery broker |
-| `NEXT_PUBLIC_API_BASE_URL` | `http://127.0.0.1:8000/api` | frontend → backend |
+| Var                          | Default                       | Meaning                                               |
+| :--------------------------- | :---------------------------- | :---------------------------------------------------- |
+| `PROVIDER_MOCK_MODE`       | `true`                      | mock all provider + live scan calls                   |
+| `CELERY_TASK_ALWAYS_EAGER` | `true`                      | run Celery tasks in-process locally                   |
+| `DATABASE_URL`             | SQLite fallback               | `postgres://torosee:torosee@127.0.0.1:5432/torosee` |
+| `REDIS_URL`                | `redis://127.0.0.1:6379/0`  | Celery broker                                         |
+| `NEXT_PUBLIC_API_BASE_URL` | `http://127.0.0.1:8000/api` | frontend → backend                                   |
 
 Live mode (`PROVIDER_MOCK_MODE=false`) requires the Tor container up for username
 routing and onion crawling; relay anomalies then pull real Onionoo history and
@@ -284,7 +312,8 @@ censorship pulls the real OONI API.
 ```powershell
 .\scripts\use-e-cache.ps1
 cd backend
-uv run pytest            # 11 tests: ingestion, OSINT scans, PyOD anomalies, crawl, ruleset
+uv run ruff check .
+uv run pytest            # 17 tests, including monitoring, diffs, rules, alerts, and dedupe
 cd ..\frontend
 npm run build            # type-checks + compiles
 ```
@@ -296,8 +325,11 @@ npm run build            # type-checks + compiles
 ```
 backend/
   osint/
-    models.py        OSINTScan, CensorshipIncident, RelayObservation, RelayAnomaly, DarkWebCrawl
-    tasks.py         scan dispatch, relay monitor, OONI refresh, crawl task, mock generators
+    models.py        scans, crawls, monitored targets, snapshots, alert rules/events
+    tasks.py         scans, relay/OONI monitoring, crawl tasks, snapshots, alert fan-out
+    schedules.py     due-target claiming + Celery Beat dispatch
+    monitoring.py    stable hashes + structured change diffs
+    alerts.py        rule evaluation, dedupe, cooldowns, Telegram delivery
     anomaly.py       PyOD TimeSeriesOD engine + z-score fallback
     whatsmyname.py   concurrent per-site username enumeration
     crawler.py       Tor SOCKS crawler (httpx + BeautifulSoup)
@@ -305,7 +337,8 @@ backend/
     views.py / serializers.py / urls.py
   jobs/ ai/ integrations/ sources/ reports/ config/
 frontend/
-  src/app/page.tsx           5-tab dashboard
+  src/app/page.tsx           6-tab dashboard
+  src/components/monitoring-panel.tsx  schedules, rules, snapshots, delivery log
   src/app/layout.tsx         root + extension-error guard
   src/components/footprint-graph.tsx   Reagraph WebGL graph
   src/components/relay-map.tsx          MapLibre anomaly map

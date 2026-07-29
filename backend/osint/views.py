@@ -1,12 +1,27 @@
 from rest_framework import status, views, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import CensorshipIncident, DarkWebCrawl, OSINTScan, RelayAnomaly
+from .models import (
+    AlertEvent,
+    AlertRule,
+    CensorshipIncident,
+    DarkWebCrawl,
+    MonitoredTarget,
+    OSINTScan,
+    RelayAnomaly,
+    Snapshot,
+)
+from .schedules import dispatch_monitored_target
 from .serializers import (
+    AlertEventSerializer,
+    AlertRuleSerializer,
     CensorshipIncidentSerializer,
     DarkWebCrawlSerializer,
+    MonitoredTargetSerializer,
     OSINTScanSerializer,
     RelayAnomalySerializer,
+    SnapshotSerializer,
 )
 from .tasks import run_darkweb_crawl_task, run_osint_scan_task, run_relay_monitor_task
 
@@ -68,3 +83,33 @@ class DarkWebCrawlViewSet(viewsets.ModelViewSet):
         run_darkweb_crawl_task.delay(record.id)
         record.refresh_from_db()
         return Response(self.get_serializer(record).data, status=status.HTTP_201_CREATED)
+
+
+class MonitoredTargetViewSet(viewsets.ModelViewSet):
+    queryset = MonitoredTarget.objects.all()
+    serializer_class = MonitoredTargetSerializer
+
+    @action(detail=True, methods=["post"], url_path="run")
+    def run(self, request, *args, **kwargs):
+        target = self.get_object()
+        result = dispatch_monitored_target(target)
+        target.refresh_from_db()
+        return Response(
+            {"target": self.get_serializer(target).data, "dispatch": result},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class SnapshotViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Snapshot.objects.select_related("monitored_target").all()
+    serializer_class = SnapshotSerializer
+
+
+class AlertRuleViewSet(viewsets.ModelViewSet):
+    queryset = AlertRule.objects.select_related("monitored_target").all()
+    serializer_class = AlertRuleSerializer
+
+
+class AlertEventViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AlertEvent.objects.select_related("rule", "monitored_target").all()
+    serializer_class = AlertEventSerializer

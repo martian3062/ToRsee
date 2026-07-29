@@ -1,9 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
 
-from osint.models import OSINTScan
-
-
 @pytest.fixture
 def api_client():
     return APIClient()

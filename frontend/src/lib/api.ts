@@ -6,6 +6,10 @@ import type {
   CensorshipIncident,
   RelayAnomaly,
   DarkWebCrawl,
+  MonitoredTarget,
+  Snapshot,
+  AlertRule,
+  AlertEvent,
 } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
@@ -98,3 +102,72 @@ export async function createCrawl(payload: {
   });
 }
 
+export async function getMonitoredTargets(): Promise<MonitoredTarget[]> {
+  return request<MonitoredTarget[]>("/osint/monitors/");
+}
+
+export async function createMonitoredTarget(payload: {
+  kind: MonitoredTarget["kind"];
+  value: string;
+  interval: number;
+  config: Record<string, unknown>;
+}): Promise<MonitoredTarget> {
+  return request<MonitoredTarget>("/osint/monitors/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateMonitoredTarget(
+  id: number,
+  payload: Partial<Pick<MonitoredTarget, "enabled" | "interval" | "config">>
+): Promise<MonitoredTarget> {
+  return request<MonitoredTarget>(`/osint/monitors/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function runMonitoredTarget(
+  id: number
+): Promise<{ target: MonitoredTarget; dispatch: Record<string, unknown> }> {
+  return request(`/osint/monitors/${id}/run/`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function getSnapshots(): Promise<Snapshot[]> {
+  return request<Snapshot[]>("/osint/snapshots/");
+}
+
+export async function getAlertRules(): Promise<AlertRule[]> {
+  return request<AlertRule[]>("/osint/alert-rules/");
+}
+
+export async function createAlertRule(payload: {
+  name: string;
+  event_type: AlertRule["event_type"];
+  conditions: Record<string, unknown>;
+  monitored_target: number | null;
+  cooldown_minutes: number;
+}): Promise<AlertRule> {
+  return request<AlertRule>("/osint/alert-rules/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAlertRule(
+  id: number,
+  payload: Partial<Pick<AlertRule, "enabled" | "conditions" | "cooldown_minutes">>
+): Promise<AlertRule> {
+  return request<AlertRule>(`/osint/alert-rules/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getAlertEvents(): Promise<AlertEvent[]> {
+  return request<AlertEvent[]>("/osint/alert-events/");
+}

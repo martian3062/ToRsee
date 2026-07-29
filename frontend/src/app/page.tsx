@@ -50,6 +50,7 @@ import type {
 import { StatusBadge } from "@/components/status-badge";
 import { FootprintGraph } from "@/components/footprint-graph";
 import { RelayMap } from "@/components/relay-map";
+import { MonitoringPanel } from "@/components/monitoring-panel";
 
 const providerOptions = ["firecrawl", "zenrows", "bright_data", "tinyfish", "direct"];
 const scanTypeOptions = [
@@ -60,7 +61,7 @@ const scanTypeOptions = [
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"ingest" | "osint" | "network" | "crawler" | "censorship">("ingest");
+  const [activeTab, setActiveTab] = useState<"ingest" | "osint" | "network" | "crawler" | "monitoring" | "censorship">("ingest");
   const [health, setHealth] = useState<HealthPayload>(fallbackHealth);
   const [jobs, setJobs] = useState<IngestionJob[]>(fallbackJobs);
   const [selectedDocument, setSelectedDocument] = useState<DocumentRecord | null>(null);
@@ -288,7 +289,7 @@ export default function Home() {
 
       {/* Navigation Tabs */}
       <div className="border-b border-slate-200">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+        <nav className="-mb-px flex gap-8 overflow-x-auto" aria-label="Tabs">
           <button
             onClick={() => setActiveTab("ingest")}
             className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
@@ -328,6 +329,16 @@ export default function Home() {
             }`}
           >
             Dark Web Crawler
+          </button>
+          <button
+            onClick={() => setActiveTab("monitoring")}
+            className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
+              activeTab === "monitoring"
+                ? "border-emerald-600 text-emerald-600 font-bold"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            Continuous Monitoring
           </button>
           <button
             onClick={() => setActiveTab("censorship")}
@@ -1097,6 +1108,8 @@ export default function Home() {
           </section>
         </div>
       )}
+
+      {activeTab === "monitoring" && <MonitoringPanel />}
 
       {activeTab === "censorship" && (
         <div className="flex flex-col gap-5">
