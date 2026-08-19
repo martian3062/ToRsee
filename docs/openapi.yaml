@@ -65,6 +65,557 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/intel/correlations/:
+    get:
+      operationId: intel_correlations_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CorrelationFinding'
+          description: ''
+  /api/intel/correlations/{id}/:
+    get:
+      operationId: intel_correlations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this correlation finding.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrelationFinding'
+          description: ''
+  /api/intel/entities/:
+    get:
+      operationId: intel_entities_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+          description: ''
+  /api/intel/entities/{id}/:
+    get:
+      operationId: intel_entities_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this entity.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: ''
+  /api/intel/evidence/:
+    get:
+      operationId: intel_evidence_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvidenceItem'
+          description: ''
+  /api/intel/evidence/{id}/:
+    get:
+      operationId: intel_evidence_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this evidence item.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvidenceItem'
+          description: ''
+  /api/intel/investigations/:
+    get:
+      operationId: intel_investigations_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Investigation'
+          description: ''
+    post:
+      operationId: intel_investigations_create
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investigation'
+          description: ''
+  /api/intel/investigations/{id}/:
+    get:
+      operationId: intel_investigations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this investigation.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investigation'
+          description: ''
+    put:
+      operationId: intel_investigations_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this investigation.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investigation'
+          description: ''
+    patch:
+      operationId: intel_investigations_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this investigation.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInvestigation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInvestigation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInvestigation'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investigation'
+          description: ''
+    delete:
+      operationId: intel_investigations_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this investigation.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/intel/investigations/{id}/correlate/:
+    post:
+      operationId: intel_investigations_correlate_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this investigation.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Investigation'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investigation'
+          description: ''
+  /api/intel/signals/:
+    get:
+      operationId: intel_signals_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DrugSignal'
+          description: ''
+  /api/intel/signals/{id}/:
+    get:
+      operationId: intel_signals_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this drug signal.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrugSignal'
+          description: ''
+  /api/intel/signals/{id}/review/:
+    post:
+      operationId: intel_signals_review_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this drug signal.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrugSignal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DrugSignal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DrugSignal'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrugSignal'
+          description: ''
+  /api/intel/sources/:
+    get:
+      operationId: intel_sources_list
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
+    post:
+      operationId: intel_sources_create
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
+  /api/intel/sources/{id}/:
+    get:
+      operationId: intel_sources_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this intelligence source.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
+    put:
+      operationId: intel_sources_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this intelligence source.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
+    patch:
+      operationId: intel_sources_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this intelligence source.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedIntelligenceSource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedIntelligenceSource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedIntelligenceSource'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
+    delete:
+      operationId: intel_sources_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this intelligence source.
+        required: true
+      tags:
+      - intel
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/intel/sources/{id}/run/:
+    post:
+      operationId: intel_sources_run_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this intelligence source.
+        required: true
+      tags:
+      - intel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IntelligenceSource'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceSource'
+          description: ''
   /api/jobs/:
     get:
       operationId: jobs_list
@@ -1080,6 +1631,16 @@ components:
       - last_triggered
       - name
       - updated_at
+    AuthorizationStatusEnum:
+      enum:
+      - pending
+      - approved
+      - suspended
+      type: string
+      description: |-
+        * `pending` - Pending approval
+        * `approved` - Approved
+        * `suspended` - Suspended
     CensorshipIncident:
       type: object
       properties:
@@ -1117,6 +1678,57 @@ components:
       - id
       - reported_at
       - target_domain
+    CollectionModeEnum:
+      enum:
+      - bot_webhook
+      - approved_public
+      - manual
+      type: string
+      description: |-
+        * `bot_webhook` - Telegram Bot webhook
+        * `approved_public` - Approved public source
+        * `manual` - Manual import
+    CorrelationFinding:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        investigation:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        severity:
+          allOf:
+          - $ref: '#/components/schemas/Severity3cdEnum'
+          readOnly: true
+        supporting_evidence_ids:
+          readOnly: true
+        entity_ids:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - description
+      - entity_ids
+      - id
+      - investigation
+      - severity
+      - supporting_evidence_ids
+      - title
+      - updated_at
     DarkWebCrawl:
       type: object
       properties:
@@ -1201,18 +1813,245 @@ components:
       - created_at
       - id
       - source
+    DrugSignal:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        evidence:
+          type: integer
+          readOnly: true
+        evidence_external_id:
+          type: string
+          readOnly: true
+        source_name:
+          type: string
+          readOnly: true
+        investigation:
+          type: integer
+          readOnly: true
+          nullable: true
+        signal_type:
+          allOf:
+          - $ref: '#/components/schemas/SignalTypeEnum'
+          readOnly: true
+        risk_score:
+          type: integer
+          readOnly: true
+        matched_terms:
+          readOnly: true
+        evidence_spans:
+          readOnly: true
+        rule_version:
+          type: string
+          readOnly: true
+        review_status:
+          allOf:
+          - $ref: '#/components/schemas/ReviewStatusEnum'
+          readOnly: true
+        reviewed_by:
+          type: string
+          readOnly: true
+        review_note:
+          type: string
+          readOnly: true
+        reviewed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - evidence
+      - evidence_external_id
+      - evidence_spans
+      - id
+      - investigation
+      - matched_terms
+      - review_note
+      - review_status
+      - reviewed_at
+      - reviewed_by
+      - risk_score
+      - rule_version
+      - signal_type
+      - source_name
+      - updated_at
+    Entity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/EntityKindEnum'
+          readOnly: true
+        value:
+          type: string
+          readOnly: true
+        normalized_value:
+          type: string
+          readOnly: true
+        display_name:
+          type: string
+          readOnly: true
+        evidence_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - display_name
+      - evidence_count
+      - id
+      - kind
+      - normalized_value
+      - updated_at
+      - value
+    EntityKindEnum:
+      enum:
+      - telegram_channel
+      - telegram_handle
+      - url
+      - onion
+      - domain
+      - contact
+      type: string
+      description: |-
+        * `telegram_channel` - Telegram channel
+        * `telegram_handle` - Telegram handle
+        * `url` - URL
+        * `onion` - Onion address
+        * `domain` - Domain
+        * `contact` - Contact indicator
     EventTypeEnum:
       enum:
       - relay_anomaly
       - censorship
       - keyword_hit
       - change
+      - drug_signal
       type: string
       description: |-
         * `relay_anomaly` - Relay anomaly
         * `censorship` - Censorship incident
         * `keyword_hit` - Crawler keyword hit
         * `change` - Snapshot change
+        * `drug_signal` - Drug-intelligence signal
+    EvidenceItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        source:
+          type: integer
+          readOnly: true
+        source_name:
+          type: string
+          readOnly: true
+        investigation:
+          type: integer
+          readOnly: true
+          nullable: true
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/EvidenceItemKindEnum'
+          readOnly: true
+        external_id:
+          type: string
+          readOnly: true
+        version:
+          type: integer
+          readOnly: true
+          default: 1
+        is_latest:
+          type: boolean
+          readOnly: true
+        is_deleted:
+          type: boolean
+          readOnly: true
+        author_alias:
+          type: string
+          readOnly: true
+        reply_to_external_id:
+          type: string
+          readOnly: true
+        forwarded_from:
+          type: string
+          readOnly: true
+        public_url:
+          type: string
+          format: uri
+          readOnly: true
+        content:
+          type: string
+          readOnly: true
+        normalized_content:
+          type: string
+          readOnly: true
+        content_hash:
+          type: string
+          readOnly: true
+        occurred_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        captured_at:
+          type: string
+          format: date-time
+          readOnly: true
+        signal_count:
+          type: integer
+          readOnly: true
+      required:
+      - author_alias
+      - captured_at
+      - content
+      - content_hash
+      - external_id
+      - forwarded_from
+      - id
+      - investigation
+      - is_deleted
+      - is_latest
+      - kind
+      - normalized_content
+      - occurred_at
+      - public_url
+      - reply_to_external_id
+      - signal_count
+      - source
+      - source_name
+      - version
+    EvidenceItemKindEnum:
+      enum:
+      - telegram_message
+      - onion_crawl
+      - manual
+      type: string
+      description: |-
+        * `telegram_message` - Telegram message
+        * `onion_crawl` - Onion crawl
+        * `manual` - Manual evidence
     IngestRequest:
       type: object
       properties:
@@ -1279,6 +2118,126 @@ components:
       - id
       - targets
       - updated_at
+    IntelligenceSource:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        investigation:
+          type: integer
+          nullable: true
+        platform:
+          allOf:
+          - $ref: '#/components/schemas/PlatformEnum'
+          default: telegram
+        external_id:
+          type: string
+          maxLength: 128
+        display_name:
+          type: string
+          maxLength: 256
+        public_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 1024
+          - type: string
+            maxLength: 0
+        collection_mode:
+          $ref: '#/components/schemas/CollectionModeEnum'
+        authorization_status:
+          $ref: '#/components/schemas/AuthorizationStatusEnum'
+        enabled:
+          type: boolean
+        interval:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        latest_cursor:
+          type: string
+          readOnly: true
+        last_collected_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        next_run:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        evidence_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - display_name
+      - evidence_count
+      - external_id
+      - id
+      - last_collected_at
+      - latest_cursor
+      - next_run
+      - updated_at
+    Investigation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/InvestigationStatusEnum'
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        authorization_reference:
+          type: string
+          maxLength: 256
+        source_count:
+          type: integer
+          readOnly: true
+        signal_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - signal_count
+      - source_count
+      - updated_at
+    InvestigationStatusEnum:
+      enum:
+      - open
+      - paused
+      - closed
+      type: string
+      description: |-
+        * `open` - Open
+        * `paused` - Paused
+        * `closed` - Closed
     JobTarget:
       type: object
       properties:
@@ -1500,6 +2459,99 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PatchedIntelligenceSource:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        investigation:
+          type: integer
+          nullable: true
+        platform:
+          allOf:
+          - $ref: '#/components/schemas/PlatformEnum'
+          default: telegram
+        external_id:
+          type: string
+          maxLength: 128
+        display_name:
+          type: string
+          maxLength: 256
+        public_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 1024
+          - type: string
+            maxLength: 0
+        collection_mode:
+          $ref: '#/components/schemas/CollectionModeEnum'
+        authorization_status:
+          $ref: '#/components/schemas/AuthorizationStatusEnum'
+        enabled:
+          type: boolean
+        interval:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        latest_cursor:
+          type: string
+          readOnly: true
+        last_collected_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        next_run:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        evidence_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedInvestigation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/InvestigationStatusEnum'
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        authorization_reference:
+          type: string
+          maxLength: 256
+        source_count:
+          type: integer
+          readOnly: true
+        signal_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     PatchedMonitoredTarget:
       type: object
       properties:
@@ -1570,6 +2622,26 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PlatformEnum:
+      enum:
+      - telegram
+      - onion
+      - manual
+      type: string
+      description: |-
+        * `telegram` - Telegram
+        * `onion` - Onion service
+        * `manual` - Manual evidence
+    PriorityEnum:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+      description: |-
+        * `low` - Low
+        * `medium` - Medium
+        * `high` - High
     ProcessingStatusEnum:
       enum:
       - queued
@@ -1635,7 +2707,7 @@ components:
           type: number
           format: double
         severity:
-          $ref: '#/components/schemas/RelayAnomalySeverityEnum'
+          $ref: '#/components/schemas/Severity3cdEnum'
         detector:
           type: string
           maxLength: 32
@@ -1648,16 +2720,22 @@ components:
       - detected_at
       - fingerprint
       - id
-    RelayAnomalySeverityEnum:
+    ReviewStatusEnum:
       enum:
-      - low
-      - medium
-      - high
+      - new
+      - triaged
+      - corroborated
+      - false_positive
+      - escalated
+      - closed
       type: string
       description: |-
-        * `low` - Low
-        * `medium` - Medium
-        * `high` - High
+        * `new` - New
+        * `triaged` - Triaged
+        * `corroborated` - Corroborated
+        * `false_positive` - False positive
+        * `escalated` - Escalated
+        * `closed` - Closed
     ScanTypeEnum:
       enum:
       - username
@@ -1683,6 +2761,24 @@ components:
           default: 8
       required:
       - query
+    Severity3cdEnum:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+      description: |-
+        * `low` - Low
+        * `medium` - Medium
+        * `high` - High
+    SignalTypeEnum:
+      enum:
+      - illicit_sale
+      - controlled_substance
+      type: string
+      description: |-
+        * `illicit_sale` - Potential illicit drug sale
+        * `controlled_substance` - Controlled substance reference
     Snapshot:
       type: object
       properties:

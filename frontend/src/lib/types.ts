@@ -4,7 +4,6 @@ import type {
   JobTargetStatusEnum,
   MonitoredTargetKindEnum,
   ProcessingStatusEnum,
-  RelayAnomalySeverityEnum,
   ScanTypeEnum,
   SourceTypeEnum,
 } from "./openapi/types.gen";
@@ -107,7 +106,7 @@ export type RelayAnomaly = {
   metric: string;
   anomaly_type: string;
   score: number;
-  severity: RelayAnomalySeverityEnum;
+  severity: "low" | "medium" | "high";
   detector: string;
   detail: Record<string, any>;
   detected_at: string;
@@ -178,4 +177,100 @@ export type AlertEvent = {
   payload: Record<string, unknown>;
   delivered: boolean;
   created_at: string;
+};
+
+export type Investigation = {
+  id: number;
+  name: string;
+  description: string;
+  status: "open" | "paused" | "closed";
+  priority: "low" | "medium" | "high";
+  authorization_reference: string;
+  source_count: number;
+  signal_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type IntelligenceSource = {
+  id: number;
+  investigation: number | null;
+  platform: "telegram" | "onion" | "manual";
+  external_id: string;
+  display_name: string;
+  public_url: string;
+  collection_mode: "bot_webhook" | "approved_public" | "manual";
+  authorization_status: "pending" | "approved" | "suspended";
+  enabled: boolean;
+  interval: number;
+  latest_cursor: string;
+  last_collected_at: string | null;
+  next_run: string | null;
+  evidence_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type EvidenceItem = {
+  id: number;
+  source: number;
+  source_name: string;
+  investigation: number | null;
+  kind: "telegram_message" | "onion_crawl" | "manual";
+  external_id: string;
+  version: number;
+  is_latest: boolean;
+  is_deleted: boolean;
+  author_alias: string;
+  reply_to_external_id: string;
+  forwarded_from: string;
+  public_url: string;
+  content: string;
+  normalized_content: string;
+  content_hash: string;
+  occurred_at: string | null;
+  captured_at: string;
+  signal_count: number;
+};
+
+export type DrugSignal = {
+  id: number;
+  evidence: number;
+  evidence_external_id: string;
+  source_name: string;
+  investigation: number | null;
+  signal_type: "illicit_sale" | "controlled_substance";
+  risk_score: number;
+  matched_terms: string[];
+  evidence_spans: Array<{ category: string; term: string; start: number; end: number }>;
+  rule_version: string;
+  review_status: "new" | "triaged" | "corroborated" | "false_positive" | "escalated" | "closed";
+  reviewed_by: string;
+  review_note: string;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type IntelligenceEntity = {
+  id: number;
+  kind: string;
+  value: string;
+  normalized_value: string;
+  display_name: string;
+  evidence_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CorrelationFinding = {
+  id: number;
+  investigation: number;
+  title: string;
+  description: string;
+  severity: "low" | "medium" | "high";
+  supporting_evidence_ids: number[];
+  entity_ids: number[];
+  created_at: string;
+  updated_at: string;
 };

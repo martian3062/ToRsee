@@ -38,6 +38,13 @@ export type AlertRule = {
     readonly updated_at: string;
 };
 
+/**
+ * * `pending` - Pending approval
+ * * `approved` - Approved
+ * * `suspended` - Suspended
+ */
+export type AuthorizationStatusEnum = 'pending' | 'approved' | 'suspended';
+
 export type CensorshipIncident = {
     readonly id: number;
     country_code: string;
@@ -47,6 +54,25 @@ export type CensorshipIncident = {
     measurement_count?: number;
     failure_rate?: number;
     readonly reported_at: string;
+};
+
+/**
+ * * `bot_webhook` - Telegram Bot webhook
+ * * `approved_public` - Approved public source
+ * * `manual` - Manual import
+ */
+export type CollectionModeEnum = 'bot_webhook' | 'approved_public' | 'manual';
+
+export type CorrelationFinding = {
+    readonly id: number;
+    readonly investigation: number;
+    readonly title: string;
+    readonly description: string;
+    severity: Severity3CdEnum;
+    readonly supporting_evidence_ids: unknown;
+    readonly entity_ids: unknown;
+    readonly created_at: string;
+    readonly updated_at: string;
 };
 
 export type DarkWebCrawl = {
@@ -74,13 +100,83 @@ export type Document = {
     readonly created_at: string;
 };
 
+export type DrugSignal = {
+    readonly id: number;
+    readonly evidence: number;
+    readonly evidence_external_id: string;
+    readonly source_name: string;
+    readonly investigation: number | null;
+    signal_type: SignalTypeEnum;
+    readonly risk_score: number;
+    readonly matched_terms: unknown;
+    readonly evidence_spans: unknown;
+    readonly rule_version: string;
+    review_status: ReviewStatusEnum;
+    readonly reviewed_by: string;
+    readonly review_note: string;
+    readonly reviewed_at: string | null;
+    readonly created_at: string;
+    readonly updated_at: string;
+};
+
+export type Entity = {
+    readonly id: number;
+    kind: EntityKindEnum;
+    readonly value: string;
+    readonly normalized_value: string;
+    readonly display_name: string;
+    readonly evidence_count: number;
+    readonly created_at: string;
+    readonly updated_at: string;
+};
+
+/**
+ * * `telegram_channel` - Telegram channel
+ * * `telegram_handle` - Telegram handle
+ * * `url` - URL
+ * * `onion` - Onion address
+ * * `domain` - Domain
+ * * `contact` - Contact indicator
+ */
+export type EntityKindEnum = 'telegram_channel' | 'telegram_handle' | 'url' | 'onion' | 'domain' | 'contact';
+
 /**
  * * `relay_anomaly` - Relay anomaly
  * * `censorship` - Censorship incident
  * * `keyword_hit` - Crawler keyword hit
  * * `change` - Snapshot change
+ * * `drug_signal` - Drug-intelligence signal
  */
-export type EventTypeEnum = 'relay_anomaly' | 'censorship' | 'keyword_hit' | 'change';
+export type EventTypeEnum = 'relay_anomaly' | 'censorship' | 'keyword_hit' | 'change' | 'drug_signal';
+
+export type EvidenceItem = {
+    readonly id: number;
+    readonly source: number;
+    readonly source_name: string;
+    readonly investigation: number | null;
+    kind: EvidenceItemKindEnum;
+    readonly external_id: string;
+    readonly version: number;
+    readonly is_latest: boolean;
+    readonly is_deleted: boolean;
+    readonly author_alias: string;
+    readonly reply_to_external_id: string;
+    readonly forwarded_from: string;
+    readonly public_url: string;
+    readonly content: string;
+    readonly normalized_content: string;
+    readonly content_hash: string;
+    readonly occurred_at: string | null;
+    readonly captured_at: string;
+    readonly signal_count: number;
+};
+
+/**
+ * * `telegram_message` - Telegram message
+ * * `onion_crawl` - Onion crawl
+ * * `manual` - Manual evidence
+ */
+export type EvidenceItemKindEnum = 'telegram_message' | 'onion_crawl' | 'manual';
 
 export type IngestRequest = {
     urls: Array<string>;
@@ -104,6 +200,45 @@ export type IngestionJob = {
     completed_at?: string | null;
     readonly targets: Array<JobTarget>;
 };
+
+export type IntelligenceSource = {
+    readonly id: number;
+    investigation?: number | null;
+    platform?: PlatformEnum;
+    external_id: string;
+    display_name: string;
+    public_url?: string | string;
+    collection_mode?: CollectionModeEnum;
+    authorization_status?: AuthorizationStatusEnum;
+    enabled?: boolean;
+    interval?: number;
+    readonly latest_cursor: string;
+    readonly last_collected_at: string | null;
+    readonly next_run: string | null;
+    readonly evidence_count: number;
+    readonly created_at: string;
+    readonly updated_at: string;
+};
+
+export type Investigation = {
+    readonly id: number;
+    name: string;
+    description?: string;
+    status?: InvestigationStatusEnum;
+    priority?: PriorityEnum;
+    authorization_reference?: string;
+    readonly source_count: number;
+    readonly signal_count: number;
+    readonly created_at: string;
+    readonly updated_at: string;
+};
+
+/**
+ * * `open` - Open
+ * * `paused` - Paused
+ * * `closed` - Closed
+ */
+export type InvestigationStatusEnum = 'open' | 'paused' | 'closed';
 
 export type JobTarget = {
     readonly id: number;
@@ -187,6 +322,38 @@ export type PatchedDarkWebCrawl = {
     readonly updated_at?: string;
 };
 
+export type PatchedIntelligenceSource = {
+    readonly id?: number;
+    investigation?: number | null;
+    platform?: PlatformEnum;
+    external_id?: string;
+    display_name?: string;
+    public_url?: string | string;
+    collection_mode?: CollectionModeEnum;
+    authorization_status?: AuthorizationStatusEnum;
+    enabled?: boolean;
+    interval?: number;
+    readonly latest_cursor?: string;
+    readonly last_collected_at?: string | null;
+    readonly next_run?: string | null;
+    readonly evidence_count?: number;
+    readonly created_at?: string;
+    readonly updated_at?: string;
+};
+
+export type PatchedInvestigation = {
+    readonly id?: number;
+    name?: string;
+    description?: string;
+    status?: InvestigationStatusEnum;
+    priority?: PriorityEnum;
+    authorization_reference?: string;
+    readonly source_count?: number;
+    readonly signal_count?: number;
+    readonly created_at?: string;
+    readonly updated_at?: string;
+};
+
 export type PatchedMonitoredTarget = {
     readonly id?: number;
     kind?: MonitoredTargetKindEnum;
@@ -214,6 +381,20 @@ export type PatchedOsintScan = {
     readonly created_at?: string;
     readonly updated_at?: string;
 };
+
+/**
+ * * `telegram` - Telegram
+ * * `onion` - Onion service
+ * * `manual` - Manual evidence
+ */
+export type PlatformEnum = 'telegram' | 'onion' | 'manual';
+
+/**
+ * * `low` - Low
+ * * `medium` - Medium
+ * * `high` - High
+ */
+export type PriorityEnum = 'low' | 'medium' | 'high';
 
 /**
  * * `queued` - Queued
@@ -244,18 +425,21 @@ export type RelayAnomaly = {
     metric?: string;
     anomaly_type?: string;
     score?: number;
-    severity?: RelayAnomalySeverityEnum;
+    severity?: Severity3CdEnum;
     detector?: string;
     detail?: unknown;
     readonly detected_at: string;
 };
 
 /**
- * * `low` - Low
- * * `medium` - Medium
- * * `high` - High
+ * * `new` - New
+ * * `triaged` - Triaged
+ * * `corroborated` - Corroborated
+ * * `false_positive` - False positive
+ * * `escalated` - Escalated
+ * * `closed` - Closed
  */
-export type RelayAnomalySeverityEnum = 'low' | 'medium' | 'high';
+export type ReviewStatusEnum = 'new' | 'triaged' | 'corroborated' | 'false_positive' | 'escalated' | 'closed';
 
 /**
  * * `username` - Username Search
@@ -269,6 +453,19 @@ export type SearchRequest = {
     query: string;
     top_k?: number;
 };
+
+/**
+ * * `low` - Low
+ * * `medium` - Medium
+ * * `high` - High
+ */
+export type Severity3CdEnum = 'low' | 'medium' | 'high';
+
+/**
+ * * `illicit_sale` - Potential illicit drug sale
+ * * `controlled_substance` - Controlled substance reference
+ */
+export type SignalTypeEnum = 'illicit_sale' | 'controlled_substance';
 
 export type Snapshot = {
     readonly id: number;
@@ -374,6 +571,26 @@ export type IngestionJobWritable = {
     completed_at?: string | null;
 };
 
+export type IntelligenceSourceWritable = {
+    investigation?: number | null;
+    platform?: PlatformEnum;
+    external_id: string;
+    display_name: string;
+    public_url?: string | string;
+    collection_mode?: CollectionModeEnum;
+    authorization_status?: AuthorizationStatusEnum;
+    enabled?: boolean;
+    interval?: number;
+};
+
+export type InvestigationWritable = {
+    name: string;
+    description?: string;
+    status?: InvestigationStatusEnum;
+    priority?: PriorityEnum;
+    authorization_reference?: string;
+};
+
 export type JobTargetWritable = {
     url: string;
     status?: JobTargetStatusEnum;
@@ -411,6 +628,26 @@ export type PatchedDarkWebCrawlWritable = {
     keywords?: string;
 };
 
+export type PatchedIntelligenceSourceWritable = {
+    investigation?: number | null;
+    platform?: PlatformEnum;
+    external_id?: string;
+    display_name?: string;
+    public_url?: string | string;
+    collection_mode?: CollectionModeEnum;
+    authorization_status?: AuthorizationStatusEnum;
+    enabled?: boolean;
+    interval?: number;
+};
+
+export type PatchedInvestigationWritable = {
+    name?: string;
+    description?: string;
+    status?: InvestigationStatusEnum;
+    priority?: PriorityEnum;
+    authorization_reference?: string;
+};
+
 export type PatchedMonitoredTargetWritable = {
     kind?: MonitoredTargetKindEnum;
     value?: string;
@@ -438,7 +675,7 @@ export type RelayAnomalyWritable = {
     metric?: string;
     anomaly_type?: string;
     score?: number;
-    severity?: RelayAnomalySeverityEnum;
+    severity?: Severity3CdEnum;
     detector?: string;
     detail?: unknown;
 };
@@ -504,6 +741,386 @@ export type HealthRetrieveResponses = {
 };
 
 export type HealthRetrieveResponse = HealthRetrieveResponses[keyof HealthRetrieveResponses];
+
+export type IntelCorrelationsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/correlations/';
+};
+
+export type IntelCorrelationsListResponses = {
+    200: Array<CorrelationFinding>;
+};
+
+export type IntelCorrelationsListResponse = IntelCorrelationsListResponses[keyof IntelCorrelationsListResponses];
+
+export type IntelCorrelationsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this correlation finding.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/correlations/{id}/';
+};
+
+export type IntelCorrelationsRetrieveResponses = {
+    200: CorrelationFinding;
+};
+
+export type IntelCorrelationsRetrieveResponse = IntelCorrelationsRetrieveResponses[keyof IntelCorrelationsRetrieveResponses];
+
+export type IntelEntitiesListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/entities/';
+};
+
+export type IntelEntitiesListResponses = {
+    200: Array<Entity>;
+};
+
+export type IntelEntitiesListResponse = IntelEntitiesListResponses[keyof IntelEntitiesListResponses];
+
+export type IntelEntitiesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this entity.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/entities/{id}/';
+};
+
+export type IntelEntitiesRetrieveResponses = {
+    200: Entity;
+};
+
+export type IntelEntitiesRetrieveResponse = IntelEntitiesRetrieveResponses[keyof IntelEntitiesRetrieveResponses];
+
+export type IntelEvidenceListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/evidence/';
+};
+
+export type IntelEvidenceListResponses = {
+    200: Array<EvidenceItem>;
+};
+
+export type IntelEvidenceListResponse = IntelEvidenceListResponses[keyof IntelEvidenceListResponses];
+
+export type IntelEvidenceRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this evidence item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/evidence/{id}/';
+};
+
+export type IntelEvidenceRetrieveResponses = {
+    200: EvidenceItem;
+};
+
+export type IntelEvidenceRetrieveResponse = IntelEvidenceRetrieveResponses[keyof IntelEvidenceRetrieveResponses];
+
+export type IntelInvestigationsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/investigations/';
+};
+
+export type IntelInvestigationsListResponses = {
+    200: Array<Investigation>;
+};
+
+export type IntelInvestigationsListResponse = IntelInvestigationsListResponses[keyof IntelInvestigationsListResponses];
+
+export type IntelInvestigationsCreateData = {
+    body: InvestigationWritable;
+    path?: never;
+    query?: never;
+    url: '/api/intel/investigations/';
+};
+
+export type IntelInvestigationsCreateResponses = {
+    201: Investigation;
+};
+
+export type IntelInvestigationsCreateResponse = IntelInvestigationsCreateResponses[keyof IntelInvestigationsCreateResponses];
+
+export type IntelInvestigationsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this investigation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/investigations/{id}/';
+};
+
+export type IntelInvestigationsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type IntelInvestigationsDestroyResponse = IntelInvestigationsDestroyResponses[keyof IntelInvestigationsDestroyResponses];
+
+export type IntelInvestigationsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this investigation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/investigations/{id}/';
+};
+
+export type IntelInvestigationsRetrieveResponses = {
+    200: Investigation;
+};
+
+export type IntelInvestigationsRetrieveResponse = IntelInvestigationsRetrieveResponses[keyof IntelInvestigationsRetrieveResponses];
+
+export type IntelInvestigationsPartialUpdateData = {
+    body?: PatchedInvestigationWritable;
+    path: {
+        /**
+         * A unique integer value identifying this investigation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/investigations/{id}/';
+};
+
+export type IntelInvestigationsPartialUpdateResponses = {
+    200: Investigation;
+};
+
+export type IntelInvestigationsPartialUpdateResponse = IntelInvestigationsPartialUpdateResponses[keyof IntelInvestigationsPartialUpdateResponses];
+
+export type IntelInvestigationsUpdateData = {
+    body: InvestigationWritable;
+    path: {
+        /**
+         * A unique integer value identifying this investigation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/investigations/{id}/';
+};
+
+export type IntelInvestigationsUpdateResponses = {
+    200: Investigation;
+};
+
+export type IntelInvestigationsUpdateResponse = IntelInvestigationsUpdateResponses[keyof IntelInvestigationsUpdateResponses];
+
+export type IntelInvestigationsCorrelateCreateData = {
+    body: InvestigationWritable;
+    path: {
+        /**
+         * A unique integer value identifying this investigation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/investigations/{id}/correlate/';
+};
+
+export type IntelInvestigationsCorrelateCreateResponses = {
+    200: Investigation;
+};
+
+export type IntelInvestigationsCorrelateCreateResponse = IntelInvestigationsCorrelateCreateResponses[keyof IntelInvestigationsCorrelateCreateResponses];
+
+export type IntelSignalsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/signals/';
+};
+
+export type IntelSignalsListResponses = {
+    200: Array<DrugSignal>;
+};
+
+export type IntelSignalsListResponse = IntelSignalsListResponses[keyof IntelSignalsListResponses];
+
+export type IntelSignalsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this drug signal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/signals/{id}/';
+};
+
+export type IntelSignalsRetrieveResponses = {
+    200: DrugSignal;
+};
+
+export type IntelSignalsRetrieveResponse = IntelSignalsRetrieveResponses[keyof IntelSignalsRetrieveResponses];
+
+export type IntelSignalsReviewCreateData = {
+    body?: DrugSignal;
+    path: {
+        /**
+         * A unique integer value identifying this drug signal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/signals/{id}/review/';
+};
+
+export type IntelSignalsReviewCreateResponses = {
+    200: DrugSignal;
+};
+
+export type IntelSignalsReviewCreateResponse = IntelSignalsReviewCreateResponses[keyof IntelSignalsReviewCreateResponses];
+
+export type IntelSourcesListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/intel/sources/';
+};
+
+export type IntelSourcesListResponses = {
+    200: Array<IntelligenceSource>;
+};
+
+export type IntelSourcesListResponse = IntelSourcesListResponses[keyof IntelSourcesListResponses];
+
+export type IntelSourcesCreateData = {
+    body: IntelligenceSourceWritable;
+    path?: never;
+    query?: never;
+    url: '/api/intel/sources/';
+};
+
+export type IntelSourcesCreateResponses = {
+    201: IntelligenceSource;
+};
+
+export type IntelSourcesCreateResponse = IntelSourcesCreateResponses[keyof IntelSourcesCreateResponses];
+
+export type IntelSourcesDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this intelligence source.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/sources/{id}/';
+};
+
+export type IntelSourcesDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type IntelSourcesDestroyResponse = IntelSourcesDestroyResponses[keyof IntelSourcesDestroyResponses];
+
+export type IntelSourcesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this intelligence source.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/sources/{id}/';
+};
+
+export type IntelSourcesRetrieveResponses = {
+    200: IntelligenceSource;
+};
+
+export type IntelSourcesRetrieveResponse = IntelSourcesRetrieveResponses[keyof IntelSourcesRetrieveResponses];
+
+export type IntelSourcesPartialUpdateData = {
+    body?: PatchedIntelligenceSourceWritable;
+    path: {
+        /**
+         * A unique integer value identifying this intelligence source.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/sources/{id}/';
+};
+
+export type IntelSourcesPartialUpdateResponses = {
+    200: IntelligenceSource;
+};
+
+export type IntelSourcesPartialUpdateResponse = IntelSourcesPartialUpdateResponses[keyof IntelSourcesPartialUpdateResponses];
+
+export type IntelSourcesUpdateData = {
+    body: IntelligenceSourceWritable;
+    path: {
+        /**
+         * A unique integer value identifying this intelligence source.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/sources/{id}/';
+};
+
+export type IntelSourcesUpdateResponses = {
+    200: IntelligenceSource;
+};
+
+export type IntelSourcesUpdateResponse = IntelSourcesUpdateResponses[keyof IntelSourcesUpdateResponses];
+
+export type IntelSourcesRunCreateData = {
+    body: IntelligenceSourceWritable;
+    path: {
+        /**
+         * A unique integer value identifying this intelligence source.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/intel/sources/{id}/run/';
+};
+
+export type IntelSourcesRunCreateResponses = {
+    200: IntelligenceSource;
+};
+
+export type IntelSourcesRunCreateResponse = IntelSourcesRunCreateResponses[keyof IntelSourcesRunCreateResponses];
 
 export type JobsListData = {
     body?: never;

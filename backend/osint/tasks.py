@@ -491,6 +491,9 @@ def run_darkweb_crawl_task(crawl_id: int):
         record.save()
 
         if record.status == DarkWebCrawl.Status.COMPLETED:
+            from drugintel.services import ingest_onion_crawl
+
+            ingest_onion_crawl(record)
             snapshot = record_snapshot(
                 source_type="crawl",
                 target=record.url,

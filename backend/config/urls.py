@@ -16,5 +16,6 @@ urlpatterns = [
     path("api/jobs/", include("jobs.urls")),
     path("api/ai/", include("ai.urls")),
     path("api/osint/", include("osint.urls")),
+    path("api/intel/", include("drugintel.urls")),
     path("api/", include("integrations.urls")),
 ]

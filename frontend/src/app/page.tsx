@@ -21,7 +21,8 @@ import {
   MapPin,
   CheckCircle2,
   XCircle,
-  Network
+  Network,
+  BrainCircuit
 } from "lucide-react";
 import {
   getHealth,
@@ -51,6 +52,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { FootprintGraph } from "@/components/footprint-graph";
 import { RelayMap } from "@/components/relay-map";
 import { MonitoringPanel } from "@/components/monitoring-panel";
+import { DrugIntelligencePanel } from "@/components/drug-intelligence-panel";
 
 const providerOptions = ["firecrawl", "zenrows", "bright_data", "tinyfish", "direct"];
 const scanTypeOptions = [
@@ -61,7 +63,7 @@ const scanTypeOptions = [
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"ingest" | "osint" | "network" | "crawler" | "monitoring" | "censorship">("ingest");
+  const [activeTab, setActiveTab] = useState<"ingest" | "osint" | "network" | "crawler" | "intel" | "monitoring" | "censorship">("ingest");
   const [health, setHealth] = useState<HealthPayload>(fallbackHealth);
   const [jobs, setJobs] = useState<IngestionJob[]>(fallbackJobs);
   const [selectedDocument, setSelectedDocument] = useState<DocumentRecord | null>(null);
@@ -329,6 +331,17 @@ export default function Home() {
             }`}
           >
             Dark Web Crawler
+          </button>
+          <button
+            onClick={() => setActiveTab("intel")}
+            className={`inline-flex items-center gap-2 border-b-2 px-3 py-3 text-sm font-semibold transition-colors ${
+              activeTab === "intel"
+                ? "border-emerald-600 text-emerald-700"
+                : "border-transparent text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <BrainCircuit className="h-4 w-4" />
+            Drug Intelligence
           </button>
           <button
             onClick={() => setActiveTab("monitoring")}
@@ -1108,6 +1121,8 @@ export default function Home() {
           </section>
         </div>
       )}
+
+      {activeTab === "intel" && <DrugIntelligencePanel />}
 
       {activeTab === "monitoring" && <MonitoringPanel />}
 

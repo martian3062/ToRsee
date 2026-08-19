@@ -10,6 +10,12 @@ import type {
   Snapshot,
   AlertRule,
   AlertEvent,
+  Investigation,
+  IntelligenceSource,
+  EvidenceItem,
+  DrugSignal,
+  IntelligenceEntity,
+  CorrelationFinding,
 } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
@@ -31,6 +37,22 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(text || response.statusText);
   }
   return response.json() as Promise<T>;
+}
+
+let intelligenceOperatorKey = "";
+
+export function setIntelligenceOperatorKey(value: string): void {
+  intelligenceOperatorKey = value.trim();
+}
+
+async function intelligenceRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  return request<T>(`/intel${path}`, {
+    ...init,
+    headers: {
+      ...(intelligenceOperatorKey ? { "X-ToRsy-Operator-Key": intelligenceOperatorKey } : {}),
+      ...(init?.headers ?? {}),
+    },
+  });
 }
 
 export async function getHealth(): Promise<HealthPayload> {
@@ -174,4 +196,79 @@ export async function updateAlertRule(
 
 export async function getAlertEvents(): Promise<AlertEvent[]> {
   return request<AlertEvent[]>("/osint/alert-events/");
+}
+
+export async function getInvestigations(): Promise<Investigation[]> {
+  return intelligenceRequest<Investigation[]>("/investigations/");
+}
+
+export async function createInvestigation(payload: Pick<Investigation, "name" | "description" | "priority" | "authorization_reference">): Promise<Investigation> {
+  return intelligenceRequest<Investigation>("/investigations/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getIntelligenceSources(): Promise<IntelligenceSource[]> {
+  return intelligenceRequest<IntelligenceSource[]>("/sources/");
+}
+
+export async function createIntelligenceSource(payload: {
+  investigation: number | null;
+  platform: IntelligenceSource["platform"];
+  external_id: string;
+  display_name: string;
+  public_url: string;
+  collection_mode: IntelligenceSource["collection_mode"];
+  authorization_status: IntelligenceSource["authorization_status"];
+  enabled: boolean;
+  interval: number;
+}): Promise<IntelligenceSource> {
+  return intelligenceRequest<IntelligenceSource>("/sources/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function runIntelligenceSource(id: number): Promise<{ source: IntelligenceSource; task_id: string }> {
+  return intelligenceRequest<{ source: IntelligenceSource; task_id: string }>(`/sources/${id}/run/`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function getEvidenceItems(investigation?: number): Promise<EvidenceItem[]> {
+  const query = investigation ? `?investigation=${investigation}` : "";
+  return intelligenceRequest<EvidenceItem[]>(`/evidence/${query}`);
+}
+
+export async function getDrugSignals(investigation?: number): Promise<DrugSignal[]> {
+  const query = investigation ? `?investigation=${investigation}` : "";
+  return intelligenceRequest<DrugSignal[]>(`/signals/${query}`);
+}
+
+export async function reviewDrugSignal(
+  id: number,
+  payload: { status: DrugSignal["review_status"]; reviewer: string; note: string }
+): Promise<DrugSignal> {
+  return intelligenceRequest<DrugSignal>(`/signals/${id}/review/`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getIntelligenceEntities(): Promise<IntelligenceEntity[]> {
+  return intelligenceRequest<IntelligenceEntity[]>("/entities/");
+}
+
+export async function getCorrelationFindings(investigation?: number): Promise<CorrelationFinding[]> {
+  const query = investigation ? `?investigation=${investigation}` : "";
+  return intelligenceRequest<CorrelationFinding[]>(`/correlations/${query}`);
+}
+
+export async function correlateInvestigation(id: number): Promise<CorrelationFinding[]> {
+  return intelligenceRequest<CorrelationFinding[]>(`/investigations/${id}/correlate/`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
 }

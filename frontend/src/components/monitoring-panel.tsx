@@ -42,6 +42,7 @@ const eventTypes: Array<{ value: AlertRule["event_type"]; label: string }> = [
   { value: "censorship", label: "Censorship incident" },
   { value: "keyword_hit", label: "Crawler keyword hit" },
   { value: "change", label: "Snapshot change" },
+  { value: "drug_signal", label: "Drug-intelligence signal" },
 ];
 
 const conditionExamples: Record<AlertRule["event_type"], string> = {
@@ -49,6 +50,7 @@ const conditionExamples: Record<AlertRule["event_type"], string> = {
   censorship: '{"min_failure_rate":0.3}',
   keyword_hit: '{"keyword":"leak","min_count":1}',
   change: '{"source_type":"username"}',
+  drug_signal: '{"min_risk_score":70}',
 };
 
 function when(value: string | null): string {

@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { aiStatusRetrieve, aiSummarizeCreate, healthRetrieve, jobsIngest, jobsList, jobsRetrieve, type Options, osintAlertEventsList, osintAlertEventsRetrieve, osintAlertRulesCreate, osintAlertRulesDestroy, osintAlertRulesList, osintAlertRulesPartialUpdate, osintAlertRulesRetrieve, osintAlertRulesUpdate, osintAnomaliesCreate, osintAnomaliesList, osintCensorshipList, osintCrawlCreate, osintCrawlDestroy, osintCrawlList, osintCrawlPartialUpdate, osintCrawlRetrieve, osintCrawlUpdate, osintMonitorsCreate, osintMonitorsDestroy, osintMonitorsList, osintMonitorsPartialUpdate, osintMonitorsRetrieve, osintMonitorsRunCreate, osintMonitorsUpdate, osintScanCreate, osintScanDestroy, osintScanList, osintScanPartialUpdate, osintScanRetrieve, osintScanUpdate, osintSnapshotsList, osintSnapshotsRetrieve, searchCreate, telegramWebhookCreate } from '../sdk.gen';
-import type { AiStatusRetrieveData, AiStatusRetrieveResponse, AiSummarizeCreateData, AiSummarizeCreateResponse, HealthRetrieveData, HealthRetrieveResponse, JobsIngestData, JobsIngestResponse, JobsListData, JobsListResponse, JobsRetrieveData, JobsRetrieveResponse, OsintAlertEventsListData, OsintAlertEventsListResponse, OsintAlertEventsRetrieveData, OsintAlertEventsRetrieveResponse, OsintAlertRulesCreateData, OsintAlertRulesCreateResponse, OsintAlertRulesDestroyData, OsintAlertRulesDestroyResponse, OsintAlertRulesListData, OsintAlertRulesListResponse, OsintAlertRulesPartialUpdateData, OsintAlertRulesPartialUpdateResponse, OsintAlertRulesRetrieveData, OsintAlertRulesRetrieveResponse, OsintAlertRulesUpdateData, OsintAlertRulesUpdateResponse, OsintAnomaliesCreateData, OsintAnomaliesCreateResponse, OsintAnomaliesListData, OsintAnomaliesListResponse, OsintCensorshipListData, OsintCensorshipListResponse, OsintCrawlCreateData, OsintCrawlCreateResponse, OsintCrawlDestroyData, OsintCrawlDestroyResponse, OsintCrawlListData, OsintCrawlListResponse, OsintCrawlPartialUpdateData, OsintCrawlPartialUpdateResponse, OsintCrawlRetrieveData, OsintCrawlRetrieveResponse, OsintCrawlUpdateData, OsintCrawlUpdateResponse, OsintMonitorsCreateData, OsintMonitorsCreateResponse, OsintMonitorsDestroyData, OsintMonitorsDestroyResponse, OsintMonitorsListData, OsintMonitorsListResponse, OsintMonitorsPartialUpdateData, OsintMonitorsPartialUpdateResponse, OsintMonitorsRetrieveData, OsintMonitorsRetrieveResponse, OsintMonitorsRunCreateData, OsintMonitorsRunCreateResponse, OsintMonitorsUpdateData, OsintMonitorsUpdateResponse, OsintScanCreateData, OsintScanCreateResponse, OsintScanDestroyData, OsintScanDestroyResponse, OsintScanListData, OsintScanListResponse, OsintScanPartialUpdateData, OsintScanPartialUpdateResponse, OsintScanRetrieveData, OsintScanRetrieveResponse, OsintScanUpdateData, OsintScanUpdateResponse, OsintSnapshotsListData, OsintSnapshotsListResponse, OsintSnapshotsRetrieveData, OsintSnapshotsRetrieveResponse, SearchCreateData, SearchCreateResponse, TelegramWebhookCreateData, TelegramWebhookCreateResponse } from '../types.gen';
+import { aiStatusRetrieve, aiSummarizeCreate, healthRetrieve, intelCorrelationsList, intelCorrelationsRetrieve, intelEntitiesList, intelEntitiesRetrieve, intelEvidenceList, intelEvidenceRetrieve, intelInvestigationsCorrelateCreate, intelInvestigationsCreate, intelInvestigationsDestroy, intelInvestigationsList, intelInvestigationsPartialUpdate, intelInvestigationsRetrieve, intelInvestigationsUpdate, intelSignalsList, intelSignalsRetrieve, intelSignalsReviewCreate, intelSourcesCreate, intelSourcesDestroy, intelSourcesList, intelSourcesPartialUpdate, intelSourcesRetrieve, intelSourcesRunCreate, intelSourcesUpdate, jobsIngest, jobsList, jobsRetrieve, type Options, osintAlertEventsList, osintAlertEventsRetrieve, osintAlertRulesCreate, osintAlertRulesDestroy, osintAlertRulesList, osintAlertRulesPartialUpdate, osintAlertRulesRetrieve, osintAlertRulesUpdate, osintAnomaliesCreate, osintAnomaliesList, osintCensorshipList, osintCrawlCreate, osintCrawlDestroy, osintCrawlList, osintCrawlPartialUpdate, osintCrawlRetrieve, osintCrawlUpdate, osintMonitorsCreate, osintMonitorsDestroy, osintMonitorsList, osintMonitorsPartialUpdate, osintMonitorsRetrieve, osintMonitorsRunCreate, osintMonitorsUpdate, osintScanCreate, osintScanDestroy, osintScanList, osintScanPartialUpdate, osintScanRetrieve, osintScanUpdate, osintSnapshotsList, osintSnapshotsRetrieve, searchCreate, telegramWebhookCreate } from '../sdk.gen';
+import type { AiStatusRetrieveData, AiStatusRetrieveResponse, AiSummarizeCreateData, AiSummarizeCreateResponse, HealthRetrieveData, HealthRetrieveResponse, IntelCorrelationsListData, IntelCorrelationsListResponse, IntelCorrelationsRetrieveData, IntelCorrelationsRetrieveResponse, IntelEntitiesListData, IntelEntitiesListResponse, IntelEntitiesRetrieveData, IntelEntitiesRetrieveResponse, IntelEvidenceListData, IntelEvidenceListResponse, IntelEvidenceRetrieveData, IntelEvidenceRetrieveResponse, IntelInvestigationsCorrelateCreateData, IntelInvestigationsCorrelateCreateResponse, IntelInvestigationsCreateData, IntelInvestigationsCreateResponse, IntelInvestigationsDestroyData, IntelInvestigationsDestroyResponse, IntelInvestigationsListData, IntelInvestigationsListResponse, IntelInvestigationsPartialUpdateData, IntelInvestigationsPartialUpdateResponse, IntelInvestigationsRetrieveData, IntelInvestigationsRetrieveResponse, IntelInvestigationsUpdateData, IntelInvestigationsUpdateResponse, IntelSignalsListData, IntelSignalsListResponse, IntelSignalsRetrieveData, IntelSignalsRetrieveResponse, IntelSignalsReviewCreateData, IntelSignalsReviewCreateResponse, IntelSourcesCreateData, IntelSourcesCreateResponse, IntelSourcesDestroyData, IntelSourcesDestroyResponse, IntelSourcesListData, IntelSourcesListResponse, IntelSourcesPartialUpdateData, IntelSourcesPartialUpdateResponse, IntelSourcesRetrieveData, IntelSourcesRetrieveResponse, IntelSourcesRunCreateData, IntelSourcesRunCreateResponse, IntelSourcesUpdateData, IntelSourcesUpdateResponse, JobsIngestData, JobsIngestResponse, JobsListData, JobsListResponse, JobsRetrieveData, JobsRetrieveResponse, OsintAlertEventsListData, OsintAlertEventsListResponse, OsintAlertEventsRetrieveData, OsintAlertEventsRetrieveResponse, OsintAlertRulesCreateData, OsintAlertRulesCreateResponse, OsintAlertRulesDestroyData, OsintAlertRulesDestroyResponse, OsintAlertRulesListData, OsintAlertRulesListResponse, OsintAlertRulesPartialUpdateData, OsintAlertRulesPartialUpdateResponse, OsintAlertRulesRetrieveData, OsintAlertRulesRetrieveResponse, OsintAlertRulesUpdateData, OsintAlertRulesUpdateResponse, OsintAnomaliesCreateData, OsintAnomaliesCreateResponse, OsintAnomaliesListData, OsintAnomaliesListResponse, OsintCensorshipListData, OsintCensorshipListResponse, OsintCrawlCreateData, OsintCrawlCreateResponse, OsintCrawlDestroyData, OsintCrawlDestroyResponse, OsintCrawlListData, OsintCrawlListResponse, OsintCrawlPartialUpdateData, OsintCrawlPartialUpdateResponse, OsintCrawlRetrieveData, OsintCrawlRetrieveResponse, OsintCrawlUpdateData, OsintCrawlUpdateResponse, OsintMonitorsCreateData, OsintMonitorsCreateResponse, OsintMonitorsDestroyData, OsintMonitorsDestroyResponse, OsintMonitorsListData, OsintMonitorsListResponse, OsintMonitorsPartialUpdateData, OsintMonitorsPartialUpdateResponse, OsintMonitorsRetrieveData, OsintMonitorsRetrieveResponse, OsintMonitorsRunCreateData, OsintMonitorsRunCreateResponse, OsintMonitorsUpdateData, OsintMonitorsUpdateResponse, OsintScanCreateData, OsintScanCreateResponse, OsintScanDestroyData, OsintScanDestroyResponse, OsintScanListData, OsintScanListResponse, OsintScanPartialUpdateData, OsintScanPartialUpdateResponse, OsintScanRetrieveData, OsintScanRetrieveResponse, OsintScanUpdateData, OsintScanUpdateResponse, OsintSnapshotsListData, OsintSnapshotsListResponse, OsintSnapshotsRetrieveData, OsintSnapshotsRetrieveResponse, SearchCreateData, SearchCreateResponse, TelegramWebhookCreateData, TelegramWebhookCreateResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -82,6 +82,340 @@ export const healthRetrieveOptions = (options?: Options<HealthRetrieveData>) => 
     },
     queryKey: healthRetrieveQueryKey(options)
 });
+
+export const intelCorrelationsListQueryKey = (options?: Options<IntelCorrelationsListData>) => createQueryKey('intelCorrelationsList', options);
+
+export const intelCorrelationsListOptions = (options?: Options<IntelCorrelationsListData>) => queryOptions<IntelCorrelationsListResponse, DefaultError, IntelCorrelationsListResponse, ReturnType<typeof intelCorrelationsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelCorrelationsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelCorrelationsListQueryKey(options)
+});
+
+export const intelCorrelationsRetrieveQueryKey = (options: Options<IntelCorrelationsRetrieveData>) => createQueryKey('intelCorrelationsRetrieve', options);
+
+export const intelCorrelationsRetrieveOptions = (options: Options<IntelCorrelationsRetrieveData>) => queryOptions<IntelCorrelationsRetrieveResponse, DefaultError, IntelCorrelationsRetrieveResponse, ReturnType<typeof intelCorrelationsRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelCorrelationsRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelCorrelationsRetrieveQueryKey(options)
+});
+
+export const intelEntitiesListQueryKey = (options?: Options<IntelEntitiesListData>) => createQueryKey('intelEntitiesList', options);
+
+export const intelEntitiesListOptions = (options?: Options<IntelEntitiesListData>) => queryOptions<IntelEntitiesListResponse, DefaultError, IntelEntitiesListResponse, ReturnType<typeof intelEntitiesListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelEntitiesList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelEntitiesListQueryKey(options)
+});
+
+export const intelEntitiesRetrieveQueryKey = (options: Options<IntelEntitiesRetrieveData>) => createQueryKey('intelEntitiesRetrieve', options);
+
+export const intelEntitiesRetrieveOptions = (options: Options<IntelEntitiesRetrieveData>) => queryOptions<IntelEntitiesRetrieveResponse, DefaultError, IntelEntitiesRetrieveResponse, ReturnType<typeof intelEntitiesRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelEntitiesRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelEntitiesRetrieveQueryKey(options)
+});
+
+export const intelEvidenceListQueryKey = (options?: Options<IntelEvidenceListData>) => createQueryKey('intelEvidenceList', options);
+
+export const intelEvidenceListOptions = (options?: Options<IntelEvidenceListData>) => queryOptions<IntelEvidenceListResponse, DefaultError, IntelEvidenceListResponse, ReturnType<typeof intelEvidenceListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelEvidenceList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelEvidenceListQueryKey(options)
+});
+
+export const intelEvidenceRetrieveQueryKey = (options: Options<IntelEvidenceRetrieveData>) => createQueryKey('intelEvidenceRetrieve', options);
+
+export const intelEvidenceRetrieveOptions = (options: Options<IntelEvidenceRetrieveData>) => queryOptions<IntelEvidenceRetrieveResponse, DefaultError, IntelEvidenceRetrieveResponse, ReturnType<typeof intelEvidenceRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelEvidenceRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelEvidenceRetrieveQueryKey(options)
+});
+
+export const intelInvestigationsListQueryKey = (options?: Options<IntelInvestigationsListData>) => createQueryKey('intelInvestigationsList', options);
+
+export const intelInvestigationsListOptions = (options?: Options<IntelInvestigationsListData>) => queryOptions<IntelInvestigationsListResponse, DefaultError, IntelInvestigationsListResponse, ReturnType<typeof intelInvestigationsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelInvestigationsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelInvestigationsListQueryKey(options)
+});
+
+export const intelInvestigationsCreateMutation = (options?: Partial<Options<IntelInvestigationsCreateData>>): UseMutationOptions<IntelInvestigationsCreateResponse, DefaultError, Options<IntelInvestigationsCreateData>> => {
+    const mutationOptions: UseMutationOptions<IntelInvestigationsCreateResponse, DefaultError, Options<IntelInvestigationsCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelInvestigationsCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelInvestigationsDestroyMutation = (options?: Partial<Options<IntelInvestigationsDestroyData>>): UseMutationOptions<IntelInvestigationsDestroyResponse, DefaultError, Options<IntelInvestigationsDestroyData>> => {
+    const mutationOptions: UseMutationOptions<IntelInvestigationsDestroyResponse, DefaultError, Options<IntelInvestigationsDestroyData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelInvestigationsDestroy({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelInvestigationsRetrieveQueryKey = (options: Options<IntelInvestigationsRetrieveData>) => createQueryKey('intelInvestigationsRetrieve', options);
+
+export const intelInvestigationsRetrieveOptions = (options: Options<IntelInvestigationsRetrieveData>) => queryOptions<IntelInvestigationsRetrieveResponse, DefaultError, IntelInvestigationsRetrieveResponse, ReturnType<typeof intelInvestigationsRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelInvestigationsRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelInvestigationsRetrieveQueryKey(options)
+});
+
+export const intelInvestigationsPartialUpdateMutation = (options?: Partial<Options<IntelInvestigationsPartialUpdateData>>): UseMutationOptions<IntelInvestigationsPartialUpdateResponse, DefaultError, Options<IntelInvestigationsPartialUpdateData>> => {
+    const mutationOptions: UseMutationOptions<IntelInvestigationsPartialUpdateResponse, DefaultError, Options<IntelInvestigationsPartialUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelInvestigationsPartialUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelInvestigationsUpdateMutation = (options?: Partial<Options<IntelInvestigationsUpdateData>>): UseMutationOptions<IntelInvestigationsUpdateResponse, DefaultError, Options<IntelInvestigationsUpdateData>> => {
+    const mutationOptions: UseMutationOptions<IntelInvestigationsUpdateResponse, DefaultError, Options<IntelInvestigationsUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelInvestigationsUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelInvestigationsCorrelateCreateMutation = (options?: Partial<Options<IntelInvestigationsCorrelateCreateData>>): UseMutationOptions<IntelInvestigationsCorrelateCreateResponse, DefaultError, Options<IntelInvestigationsCorrelateCreateData>> => {
+    const mutationOptions: UseMutationOptions<IntelInvestigationsCorrelateCreateResponse, DefaultError, Options<IntelInvestigationsCorrelateCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelInvestigationsCorrelateCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSignalsListQueryKey = (options?: Options<IntelSignalsListData>) => createQueryKey('intelSignalsList', options);
+
+export const intelSignalsListOptions = (options?: Options<IntelSignalsListData>) => queryOptions<IntelSignalsListResponse, DefaultError, IntelSignalsListResponse, ReturnType<typeof intelSignalsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelSignalsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelSignalsListQueryKey(options)
+});
+
+export const intelSignalsRetrieveQueryKey = (options: Options<IntelSignalsRetrieveData>) => createQueryKey('intelSignalsRetrieve', options);
+
+export const intelSignalsRetrieveOptions = (options: Options<IntelSignalsRetrieveData>) => queryOptions<IntelSignalsRetrieveResponse, DefaultError, IntelSignalsRetrieveResponse, ReturnType<typeof intelSignalsRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelSignalsRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelSignalsRetrieveQueryKey(options)
+});
+
+export const intelSignalsReviewCreateMutation = (options?: Partial<Options<IntelSignalsReviewCreateData>>): UseMutationOptions<IntelSignalsReviewCreateResponse, DefaultError, Options<IntelSignalsReviewCreateData>> => {
+    const mutationOptions: UseMutationOptions<IntelSignalsReviewCreateResponse, DefaultError, Options<IntelSignalsReviewCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSignalsReviewCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSourcesListQueryKey = (options?: Options<IntelSourcesListData>) => createQueryKey('intelSourcesList', options);
+
+export const intelSourcesListOptions = (options?: Options<IntelSourcesListData>) => queryOptions<IntelSourcesListResponse, DefaultError, IntelSourcesListResponse, ReturnType<typeof intelSourcesListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelSourcesList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelSourcesListQueryKey(options)
+});
+
+export const intelSourcesCreateMutation = (options?: Partial<Options<IntelSourcesCreateData>>): UseMutationOptions<IntelSourcesCreateResponse, DefaultError, Options<IntelSourcesCreateData>> => {
+    const mutationOptions: UseMutationOptions<IntelSourcesCreateResponse, DefaultError, Options<IntelSourcesCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSourcesCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSourcesDestroyMutation = (options?: Partial<Options<IntelSourcesDestroyData>>): UseMutationOptions<IntelSourcesDestroyResponse, DefaultError, Options<IntelSourcesDestroyData>> => {
+    const mutationOptions: UseMutationOptions<IntelSourcesDestroyResponse, DefaultError, Options<IntelSourcesDestroyData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSourcesDestroy({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSourcesRetrieveQueryKey = (options: Options<IntelSourcesRetrieveData>) => createQueryKey('intelSourcesRetrieve', options);
+
+export const intelSourcesRetrieveOptions = (options: Options<IntelSourcesRetrieveData>) => queryOptions<IntelSourcesRetrieveResponse, DefaultError, IntelSourcesRetrieveResponse, ReturnType<typeof intelSourcesRetrieveQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await intelSourcesRetrieve({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: intelSourcesRetrieveQueryKey(options)
+});
+
+export const intelSourcesPartialUpdateMutation = (options?: Partial<Options<IntelSourcesPartialUpdateData>>): UseMutationOptions<IntelSourcesPartialUpdateResponse, DefaultError, Options<IntelSourcesPartialUpdateData>> => {
+    const mutationOptions: UseMutationOptions<IntelSourcesPartialUpdateResponse, DefaultError, Options<IntelSourcesPartialUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSourcesPartialUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSourcesUpdateMutation = (options?: Partial<Options<IntelSourcesUpdateData>>): UseMutationOptions<IntelSourcesUpdateResponse, DefaultError, Options<IntelSourcesUpdateData>> => {
+    const mutationOptions: UseMutationOptions<IntelSourcesUpdateResponse, DefaultError, Options<IntelSourcesUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSourcesUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const intelSourcesRunCreateMutation = (options?: Partial<Options<IntelSourcesRunCreateData>>): UseMutationOptions<IntelSourcesRunCreateResponse, DefaultError, Options<IntelSourcesRunCreateData>> => {
+    const mutationOptions: UseMutationOptions<IntelSourcesRunCreateResponse, DefaultError, Options<IntelSourcesRunCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await intelSourcesRunCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export const jobsListQueryKey = (options?: Options<JobsListData>) => createQueryKey('jobsList', options);
 

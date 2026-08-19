@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AiStatusRetrieveData, AiStatusRetrieveResponses, AiSummarizeCreateData, AiSummarizeCreateResponses, HealthRetrieveData, HealthRetrieveResponses, JobsIngestData, JobsIngestResponses, JobsListData, JobsListResponses, JobsRetrieveData, JobsRetrieveResponses, OsintAlertEventsListData, OsintAlertEventsListResponses, OsintAlertEventsRetrieveData, OsintAlertEventsRetrieveResponses, OsintAlertRulesCreateData, OsintAlertRulesCreateResponses, OsintAlertRulesDestroyData, OsintAlertRulesDestroyResponses, OsintAlertRulesListData, OsintAlertRulesListResponses, OsintAlertRulesPartialUpdateData, OsintAlertRulesPartialUpdateResponses, OsintAlertRulesRetrieveData, OsintAlertRulesRetrieveResponses, OsintAlertRulesUpdateData, OsintAlertRulesUpdateResponses, OsintAnomaliesCreateData, OsintAnomaliesCreateResponses, OsintAnomaliesListData, OsintAnomaliesListResponses, OsintCensorshipListData, OsintCensorshipListResponses, OsintCrawlCreateData, OsintCrawlCreateResponses, OsintCrawlDestroyData, OsintCrawlDestroyResponses, OsintCrawlListData, OsintCrawlListResponses, OsintCrawlPartialUpdateData, OsintCrawlPartialUpdateResponses, OsintCrawlRetrieveData, OsintCrawlRetrieveResponses, OsintCrawlUpdateData, OsintCrawlUpdateResponses, OsintMonitorsCreateData, OsintMonitorsCreateResponses, OsintMonitorsDestroyData, OsintMonitorsDestroyResponses, OsintMonitorsListData, OsintMonitorsListResponses, OsintMonitorsPartialUpdateData, OsintMonitorsPartialUpdateResponses, OsintMonitorsRetrieveData, OsintMonitorsRetrieveResponses, OsintMonitorsRunCreateData, OsintMonitorsRunCreateResponses, OsintMonitorsUpdateData, OsintMonitorsUpdateResponses, OsintScanCreateData, OsintScanCreateResponses, OsintScanDestroyData, OsintScanDestroyResponses, OsintScanListData, OsintScanListResponses, OsintScanPartialUpdateData, OsintScanPartialUpdateResponses, OsintScanRetrieveData, OsintScanRetrieveResponses, OsintScanUpdateData, OsintScanUpdateResponses, OsintSnapshotsListData, OsintSnapshotsListResponses, OsintSnapshotsRetrieveData, OsintSnapshotsRetrieveResponses, SearchCreateData, SearchCreateResponses, TelegramWebhookCreateData, TelegramWebhookCreateResponses } from './types.gen';
+import type { AiStatusRetrieveData, AiStatusRetrieveResponses, AiSummarizeCreateData, AiSummarizeCreateResponses, HealthRetrieveData, HealthRetrieveResponses, IntelCorrelationsListData, IntelCorrelationsListResponses, IntelCorrelationsRetrieveData, IntelCorrelationsRetrieveResponses, IntelEntitiesListData, IntelEntitiesListResponses, IntelEntitiesRetrieveData, IntelEntitiesRetrieveResponses, IntelEvidenceListData, IntelEvidenceListResponses, IntelEvidenceRetrieveData, IntelEvidenceRetrieveResponses, IntelInvestigationsCorrelateCreateData, IntelInvestigationsCorrelateCreateResponses, IntelInvestigationsCreateData, IntelInvestigationsCreateResponses, IntelInvestigationsDestroyData, IntelInvestigationsDestroyResponses, IntelInvestigationsListData, IntelInvestigationsListResponses, IntelInvestigationsPartialUpdateData, IntelInvestigationsPartialUpdateResponses, IntelInvestigationsRetrieveData, IntelInvestigationsRetrieveResponses, IntelInvestigationsUpdateData, IntelInvestigationsUpdateResponses, IntelSignalsListData, IntelSignalsListResponses, IntelSignalsRetrieveData, IntelSignalsRetrieveResponses, IntelSignalsReviewCreateData, IntelSignalsReviewCreateResponses, IntelSourcesCreateData, IntelSourcesCreateResponses, IntelSourcesDestroyData, IntelSourcesDestroyResponses, IntelSourcesListData, IntelSourcesListResponses, IntelSourcesPartialUpdateData, IntelSourcesPartialUpdateResponses, IntelSourcesRetrieveData, IntelSourcesRetrieveResponses, IntelSourcesRunCreateData, IntelSourcesRunCreateResponses, IntelSourcesUpdateData, IntelSourcesUpdateResponses, JobsIngestData, JobsIngestResponses, JobsListData, JobsListResponses, JobsRetrieveData, JobsRetrieveResponses, OsintAlertEventsListData, OsintAlertEventsListResponses, OsintAlertEventsRetrieveData, OsintAlertEventsRetrieveResponses, OsintAlertRulesCreateData, OsintAlertRulesCreateResponses, OsintAlertRulesDestroyData, OsintAlertRulesDestroyResponses, OsintAlertRulesListData, OsintAlertRulesListResponses, OsintAlertRulesPartialUpdateData, OsintAlertRulesPartialUpdateResponses, OsintAlertRulesRetrieveData, OsintAlertRulesRetrieveResponses, OsintAlertRulesUpdateData, OsintAlertRulesUpdateResponses, OsintAnomaliesCreateData, OsintAnomaliesCreateResponses, OsintAnomaliesListData, OsintAnomaliesListResponses, OsintCensorshipListData, OsintCensorshipListResponses, OsintCrawlCreateData, OsintCrawlCreateResponses, OsintCrawlDestroyData, OsintCrawlDestroyResponses, OsintCrawlListData, OsintCrawlListResponses, OsintCrawlPartialUpdateData, OsintCrawlPartialUpdateResponses, OsintCrawlRetrieveData, OsintCrawlRetrieveResponses, OsintCrawlUpdateData, OsintCrawlUpdateResponses, OsintMonitorsCreateData, OsintMonitorsCreateResponses, OsintMonitorsDestroyData, OsintMonitorsDestroyResponses, OsintMonitorsListData, OsintMonitorsListResponses, OsintMonitorsPartialUpdateData, OsintMonitorsPartialUpdateResponses, OsintMonitorsRetrieveData, OsintMonitorsRetrieveResponses, OsintMonitorsRunCreateData, OsintMonitorsRunCreateResponses, OsintMonitorsUpdateData, OsintMonitorsUpdateResponses, OsintScanCreateData, OsintScanCreateResponses, OsintScanDestroyData, OsintScanDestroyResponses, OsintScanListData, OsintScanListResponses, OsintScanPartialUpdateData, OsintScanPartialUpdateResponses, OsintScanRetrieveData, OsintScanRetrieveResponses, OsintScanUpdateData, OsintScanUpdateResponses, OsintSnapshotsListData, OsintSnapshotsListResponses, OsintSnapshotsRetrieveData, OsintSnapshotsRetrieveResponses, SearchCreateData, SearchCreateResponses, TelegramWebhookCreateData, TelegramWebhookCreateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -50,6 +50,272 @@ export const healthRetrieve = <ThrowOnError extends boolean = false>(options?: O
         }, { scheme: 'basic', type: 'http' }],
     url: '/api/health',
     ...options
+});
+
+export const intelCorrelationsList = <ThrowOnError extends boolean = false>(options?: Options<IntelCorrelationsListData, ThrowOnError>): RequestResult<IntelCorrelationsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelCorrelationsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/correlations/',
+    ...options
+});
+
+export const intelCorrelationsRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelCorrelationsRetrieveData, ThrowOnError>): RequestResult<IntelCorrelationsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelCorrelationsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/correlations/{id}/',
+    ...options
+});
+
+export const intelEntitiesList = <ThrowOnError extends boolean = false>(options?: Options<IntelEntitiesListData, ThrowOnError>): RequestResult<IntelEntitiesListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelEntitiesListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/entities/',
+    ...options
+});
+
+export const intelEntitiesRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelEntitiesRetrieveData, ThrowOnError>): RequestResult<IntelEntitiesRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelEntitiesRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/entities/{id}/',
+    ...options
+});
+
+export const intelEvidenceList = <ThrowOnError extends boolean = false>(options?: Options<IntelEvidenceListData, ThrowOnError>): RequestResult<IntelEvidenceListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelEvidenceListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/evidence/',
+    ...options
+});
+
+export const intelEvidenceRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelEvidenceRetrieveData, ThrowOnError>): RequestResult<IntelEvidenceRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelEvidenceRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/evidence/{id}/',
+    ...options
+});
+
+export const intelInvestigationsList = <ThrowOnError extends boolean = false>(options?: Options<IntelInvestigationsListData, ThrowOnError>): RequestResult<IntelInvestigationsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelInvestigationsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/',
+    ...options
+});
+
+export const intelInvestigationsCreate = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsCreateData, ThrowOnError>): RequestResult<IntelInvestigationsCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntelInvestigationsCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelInvestigationsDestroy = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsDestroyData, ThrowOnError>): RequestResult<IntelInvestigationsDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<IntelInvestigationsDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/{id}/',
+    ...options
+});
+
+export const intelInvestigationsRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsRetrieveData, ThrowOnError>): RequestResult<IntelInvestigationsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelInvestigationsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/{id}/',
+    ...options
+});
+
+export const intelInvestigationsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsPartialUpdateData, ThrowOnError>): RequestResult<IntelInvestigationsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<IntelInvestigationsPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelInvestigationsUpdate = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsUpdateData, ThrowOnError>): RequestResult<IntelInvestigationsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<IntelInvestigationsUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelInvestigationsCorrelateCreate = <ThrowOnError extends boolean = false>(options: Options<IntelInvestigationsCorrelateCreateData, ThrowOnError>): RequestResult<IntelInvestigationsCorrelateCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntelInvestigationsCorrelateCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/investigations/{id}/correlate/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelSignalsList = <ThrowOnError extends boolean = false>(options?: Options<IntelSignalsListData, ThrowOnError>): RequestResult<IntelSignalsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelSignalsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/signals/',
+    ...options
+});
+
+export const intelSignalsRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelSignalsRetrieveData, ThrowOnError>): RequestResult<IntelSignalsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelSignalsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/signals/{id}/',
+    ...options
+});
+
+export const intelSignalsReviewCreate = <ThrowOnError extends boolean = false>(options: Options<IntelSignalsReviewCreateData, ThrowOnError>): RequestResult<IntelSignalsReviewCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntelSignalsReviewCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/signals/{id}/review/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelSourcesList = <ThrowOnError extends boolean = false>(options?: Options<IntelSourcesListData, ThrowOnError>): RequestResult<IntelSourcesListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<IntelSourcesListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/',
+    ...options
+});
+
+export const intelSourcesCreate = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesCreateData, ThrowOnError>): RequestResult<IntelSourcesCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntelSourcesCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelSourcesDestroy = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesDestroyData, ThrowOnError>): RequestResult<IntelSourcesDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<IntelSourcesDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/{id}/',
+    ...options
+});
+
+export const intelSourcesRetrieve = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesRetrieveData, ThrowOnError>): RequestResult<IntelSourcesRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<IntelSourcesRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/{id}/',
+    ...options
+});
+
+export const intelSourcesPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesPartialUpdateData, ThrowOnError>): RequestResult<IntelSourcesPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<IntelSourcesPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelSourcesUpdate = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesUpdateData, ThrowOnError>): RequestResult<IntelSourcesUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<IntelSourcesUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const intelSourcesRunCreate = <ThrowOnError extends boolean = false>(options: Options<IntelSourcesRunCreateData, ThrowOnError>): RequestResult<IntelSourcesRunCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntelSourcesRunCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }, { scheme: 'basic', type: 'http' }],
+    url: '/api/intel/sources/{id}/run/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 export const jobsList = <ThrowOnError extends boolean = false>(options?: Options<JobsListData, ThrowOnError>): RequestResult<JobsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<JobsListResponses, unknown, ThrowOnError>({

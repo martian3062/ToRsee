@@ -46,17 +46,19 @@ dashboard and REST API.
 
 ---
 
-## 2. The correlation engine (the missing thesis piece) 🔴⭐
+## 2. The correlation engine (the thesis piece) 🔴⭐
 
-The original proposal's objective #3 — correlate network-layer and identity-layer
-signals — is still unbuilt. This is what makes ToRsy more than a collection of tools.
+The first governed implementation now correlates repeated Telegram handles, URLs, and
+onion references across evidence in an `Investigation`; every relationship preserves its
+supporting evidence and is explicitly labelled as correlation rather than identity proof.
 
 - 🔴 **Cross-signal correlation.** Join `RelayAnomaly` (by country/ASN) with
   `CensorshipIncident` (same country/ASN) and crawl keyword-hits over the same window.
   Surface "relay drop-off in AS_X coincides with censorship spike in AS_X" cards.
-- 🟡 **Entity graph / investigations.** A first-class `Investigation` that groups scans,
-  crawls, relays, and domains into one case with a shared Reagraph graph across *all*
-  entity types (username → domain → IP → cert → relay → onion mention).
+- ✅ **Telegram evidence and triage.** Approved source registry, versioned message evidence,
+  deterministic drug-sale signals, human decisions, and high-risk Telegram alerts.
+- 🟡 **Entity graph / investigations.** Extend the current Telegram entity base to group
+  scans, crawls, relays, and domains in a shared graph across *all* entity types.
 - 🟡 **Timeline view.** A unified chronological feed of every event in an investigation
   (Recharts/visx time-series with anomaly overlays).
 
@@ -122,7 +124,9 @@ ToRsy has a Tor egress and stores investigation data — it needs guardrails onc
 more than a local demo.
 
 - 🔴 **AuthN/Z + multi-tenant.** DRF auth (token/JWT), per-user investigations, and an
-  audit log of who scanned what. The API is currently open and unpaginated.
+  audit log of who scanned what. The drug-intelligence endpoints already require an
+  operator key outside mock mode; replace that bootstrap gate with user roles before
+  shared deployment.
 - 🟡 **Rate limiting + scope allowlist** on live scans; **pagination + filtering** on
   scan/incident/anomaly/crawl endpoints.
 - 🟡 **Ethics & legality guardrails.** Consent/authorization prompts, a target allowlist,

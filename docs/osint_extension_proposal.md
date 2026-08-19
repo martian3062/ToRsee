@@ -194,3 +194,19 @@ To build these features out, we should follow this step-by-step workflow:
 5. **Verify and Run Tests** to check proper Tor-based routing and metadata extraction.
 
 Would you like to start implementing the **backend models and Celery tasks** for these OSINT extensions, or would you like to review specific library configurations first?
+
+---
+
+## 6. Drug Intelligence & Telegram Addendum
+
+The implemented `drugintel` app turns approved Telegram channels and groups into a
+governed intelligence source. A source must be explicitly registered, approved, and enabled
+before a signed Bot webhook update is retained. Each captured message stores a SHA-256
+content hash, immutable versions for edits, extracted handles/URLs/onion indicators, and a
+deterministic rule result. High-risk results enter a human triage queue; they do not create
+an identity allegation or automated escalation.
+
+This design intentionally excludes Secret Chats, private-content bypasses, automatic source
+joining, and AI/embedding processing of Telegram-derived content. Approved onion crawl sources
+now enter the same `EvidenceItem` and `Entity` contract; the next depth increment is extending
+the shared investigation graph to domain, relay, and OONI records.

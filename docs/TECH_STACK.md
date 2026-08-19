@@ -21,6 +21,9 @@ The backend defaults to `PROVIDER_MOCK_MODE=true`, so the whole pipeline works w
 6. Pinecone receives vectors when configured; otherwise local search is used.
 7. Telegram sends a job-complete message when configured; otherwise a mock send result is recorded.
 8. Monitoring state changes are emitted over SSE and invalidate the browser's TanStack Query cache.
+9. Approved Telegram Bot updates enter the governed drug-intelligence service only when
+   collection is enabled; evidence is hashed, versioned, triaged with deterministic rules,
+   and correlated inside an investigation.
 
 ## API Surface
 
@@ -49,6 +52,9 @@ The backend defaults to `PROVIDER_MOCK_MODE=true`, so the whole pipeline works w
 - TabPFN: small tabular classification/regression.
 - Pexels: image/video media search for content workflows.
 - Telegram: alerts and commands: `/status`, `/search <query>`, `/summarize <query>`.
+- Drug intelligence: authorized Telegram evidence, deterministic sale-signal rules, review
+  decisions, source/indicator graph, and correlation findings. Telegram evidence is not sent
+  to AI, embedding, or vector providers.
 - Stitch: design exploration and UI handoff placeholder.
 
 ## Environment
@@ -61,6 +67,9 @@ Important local defaults:
 - `REDIS_URL=redis://127.0.0.1:6379/0`
 - `CELERY_TASK_ALWAYS_EAGER=true`
 - `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000/api`
+- `TELEGRAM_COLLECTION_ENABLED=false`
+- `INTELLIGENCE_LIVE_ENABLED=false`
+- `INTELLIGENCE_OPERATOR_KEY=` (required for live `/api/intel/*` requests)
 
 Cache and environment setup:
 

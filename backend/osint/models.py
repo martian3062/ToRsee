@@ -245,6 +245,7 @@ class AlertRule(models.Model):
         CENSORSHIP = "censorship", "Censorship incident"
         KEYWORD_HIT = "keyword_hit", "Crawler keyword hit"
         CHANGE = "change", "Snapshot change"
+        DRUG_SIGNAL = "drug_signal", "Drug-intelligence signal"
 
     name = models.CharField(max_length=128)
     event_type = models.CharField(max_length=24, choices=EventType.choices)

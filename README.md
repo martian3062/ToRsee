@@ -39,6 +39,7 @@ metadata leaks, dark-web mentions) in one dashboard.
 | **Network**         | Censorship cockpit                | Web-connectivity anomalies by country/ASN                                             | OONI Aggregation API                                                |
 | **Dark web**        | Onion crawler                     | Crawl`.onion`/clearnet through the Tor SOCKS proxy, extract text/links/keyword hits | httpx + BeautifulSoup over`socks5h://`                            |
 | **Monitoring**      | Continuous watch + alerts         | Re-run targets on a cadence, diff snapshots, evaluate rules, and fan alerts to Telegram | Celery Beat / Django / SHA-256                                      |
+| **Drug intelligence** | Governed Telegram evidence       | Capture only approved Telegram sources, preserve versioned evidence, flag deterministic sale signals, and route analyst review | Bot webhook / Celery / SHA-256 / rules engine                       |
 
 Visualization: **Reagraph** (WebGL footprint graph), **MapLibre GL** (relay/anomaly geo-map),
 plus native tables and meters.
@@ -196,6 +197,30 @@ country/ASN whose anomaly rate exceeds 20%, and renders them as an incident tabl
 plus regional blocking-ratio meters. In mock mode a clearly-labelled `(demo)`
 incident is written instead of fabricating live-looking data.
 
+### 6. Drug intelligence and approved Telegram sources
+
+```mermaid
+sequenceDiagram
+    participant TG as Approved Telegram source
+    participant WH as Signed webhook
+    participant INTEL as Drug intelligence service
+    participant DB as Evidence ledger
+    participant UI as Analyst triage
+    TG->>WH: channel/group update
+    WH->>INTEL: queue only when collection is enabled
+    INTEL->>INTEL: allowlist source, dedupe update, version edits
+    INTEL->>DB: evidence hash, indicators, deterministic signal
+    DB->>UI: triage queue and correlation findings
+    UI->>DB: reviewer decision and audit history
+```
+
+Telegram collection is disabled by default. It accepts only approved Bot-API sources
+registered by numeric chat ID; unknown, pending, and suspended sources are ignored.
+Live mode requires Telegram's webhook secret and an operator key for intelligence API
+actions. This component does not send Telegram evidence to AI, embedding, or vector
+providers. Secret Chats, private-content bypasses, and automatic source joining are out
+of scope.
+
 ---
 
 ## API surface
@@ -222,6 +247,15 @@ incident is written instead of fabricating live-looking data.
 | `GET`      | `/api/osint/alert-events/` | auditable Telegram delivery log                                      |
 | `GET`      | `/api/osint/events/stream/` | live monitoring cache-invalidation stream (SSE)                    |
 | `POST`     | `/api/telegram/webhook`  | Telegram Bot update (`/status`, `/search`, `/summarize`)      |
+| `GET/POST` | `/api/intel/investigations/` | governed cases, authorization reference, priority                |
+| `POST`     | `/api/intel/investigations/{id}/correlate/` | refresh repeated-indicator findings                   |
+| `GET/POST` | `/api/intel/sources/` | approved Telegram / evidence-source registry                       |
+| `POST`     | `/api/intel/sources/{id}/run/` | mock collection trigger or live webhook-state check            |
+| `GET`      | `/api/intel/evidence/` | versioned, hashable evidence ledger                               |
+| `GET`      | `/api/intel/signals/` | deterministic drug-sale triage queue                              |
+| `POST`     | `/api/intel/signals/{id}/review/` | human review decision and note                              |
+| `GET`      | `/api/intel/entities/` | provenance-backed source, handle, URL, and onion indicators       |
+| `GET`      | `/api/intel/correlations/` | repeated-indicator findings by investigation                    |
 
 ---
 
@@ -238,6 +272,9 @@ incident is written instead of fabricating live-looking data.
 | `osint`   | `DarkWebCrawl`                              | Tor-routed crawl result                         |
 | `osint`   | `MonitoredTarget`, `Snapshot`               | scheduled watches + change history              |
 | `osint`   | `AlertRule`, `AlertEvent`                   | rule filters + delivery audit                   |
+| `drugintel` | `Investigation`, `IntelligenceSource` | authorized cases and source registry              |
+| `drugintel` | `EvidenceItem`, `DrugSignal` | versioned evidence, deterministic score, human triage |
+| `drugintel` | `Entity`, `EvidenceEntity`, `EntityRelationship`, `CorrelationFinding` | provenance-backed network correlation |
 
 ---
 
@@ -304,6 +341,9 @@ Copy `.env.example` to `.env` and set keys only for providers you want live.
 | `DATABASE_URL`             | SQLite fallback               | `postgres://torsy:torsy@127.0.0.1:5432/torsy`       |
 | `REDIS_URL`                | `redis://127.0.0.1:6379/0`  | Celery broker                                         |
 | `NEXT_PUBLIC_API_BASE_URL` | `http://127.0.0.1:8000/api` | frontend → backend                                   |
+| `TELEGRAM_COLLECTION_ENABLED` | `false` | accepts allowlisted Telegram updates only when enabled |
+| `INTELLIGENCE_LIVE_ENABLED` | `false` | permits live intelligence operations with an operator key |
+| `INTELLIGENCE_OPERATOR_KEY` | empty | required in `X-ToRsy-Operator-Key` outside mock mode |
 
 Live mode (`PROVIDER_MOCK_MODE=false`) requires the Tor container up for username
 routing and onion crawling; relay anomalies then pull real Onionoo history and
@@ -349,10 +389,17 @@ backend/
     events.py        ASGI-friendly monitoring Server-Sent Events stream
     data/whatsmyname.json   curated site signatures
     views.py / serializers.py / urls.py
+  drugintel/
+    models.py        investigations, source authorization, evidence, triage, entities
+    services.py      signed-update persistence, indicator extraction, correlations
+    rules.py         deterministic, evidence-span-aware drug signal rules
+    tasks.py         webhook handoff and approved-source scheduling
+    views.py / serializers.py / urls.py
   jobs/ ai/ integrations/ sources/ reports/ config/
 frontend/
-  src/app/page.tsx           6-tab dashboard
+  src/app/page.tsx           7-tab dashboard
   src/components/monitoring-panel.tsx  TanStack Query monitoring cockpit
+  src/components/drug-intelligence-panel.tsx  source registry, triage, evidence, correlations
   src/components/app-providers.tsx     shared query cache + devtools
   src/hooks/use-monitoring-stream.ts   SSE invalidation + reconnect state
   src/app/layout.tsx         root providers + extension-error guard

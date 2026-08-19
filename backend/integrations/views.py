@@ -1,3 +1,6 @@
+import hmac
+
+from django.conf import settings
 from django.db import connection
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -70,4 +73,28 @@ class TelegramWebhookView(APIView):
 
     @extend_schema(request=OpenApiTypes.OBJECT, responses=OpenApiTypes.OBJECT)
     def post(self, request):
-        return Response(TelegramCommandRouter().handle_update(request.data))
+        content_length = int(request.META.get("CONTENT_LENGTH") or 0)
+        if content_length > settings.TELEGRAM_WEBHOOK_MAX_BYTES:
+            return Response({"detail": "Webhook body is too large."}, status=413)
+
+        if not settings.PROVIDER_MOCK_MODE:
+            expected = settings.PROVIDER_SETTINGS["telegram"]["webhook_secret"]
+            received = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+            if not expected or not received or not hmac.compare_digest(expected, received):
+                return Response({"detail": "Invalid Telegram webhook secret."}, status=403)
+
+        payload = request.data
+        response: dict = {"collection": {"outcome": "disabled"}}
+        if settings.TELEGRAM_COLLECTION_ENABLED and (
+            settings.PROVIDER_MOCK_MODE or settings.INTELLIGENCE_LIVE_ENABLED
+        ):
+            from drugintel.tasks import ingest_telegram_update_task
+
+            task = ingest_telegram_update_task.delay(payload)
+            response["collection"] = {"outcome": "queued", "task_id": task.id}
+
+        message = payload.get("message") or payload.get("edited_message") or {}
+        text = (message.get("text") or "").strip()
+        if text.startswith("/"):
+            response.update(TelegramCommandRouter().handle_update(payload))
+        return Response(response)
