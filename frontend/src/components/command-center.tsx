@@ -54,6 +54,7 @@ import { FootprintGraph } from "@/components/footprint-graph";
 import { RelayMap } from "@/components/relay-map";
 import { MonitoringPanel } from "@/components/monitoring-panel";
 import { DrugIntelligencePanel } from "@/components/drug-intelligence-panel";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const providerOptions = ["firecrawl", "zenrows", "bright_data", "tinyfish", "direct"];
 const scanTypeOptions = [
@@ -264,6 +265,7 @@ export function CommandCenter() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <ThemeToggle />
           <Link
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
             href="/intelligence"

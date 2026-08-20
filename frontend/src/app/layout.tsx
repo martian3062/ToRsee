@@ -20,6 +20,11 @@ export const metadata: Metadata = {
 // own inpage.js — never in ToRsy code — so suppressing them is purely cosmetic.
 const suppressExtensionErrors = `
 (function () {
+  try {
+    var storedTheme = localStorage.getItem("torsy-theme");
+    document.documentElement.dataset.theme = storedTheme === "light" ? "light" : "dark";
+  } catch (error) {}
+
   function fromExtension(text) {
     text = String(text || "");
     return text.indexOf("chrome-extension://") !== -1 ||
@@ -46,7 +51,7 @@ const suppressExtensionErrors = `
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: suppressExtensionErrors }} />
         <AppProviders>
