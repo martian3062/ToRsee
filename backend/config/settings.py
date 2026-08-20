@@ -23,7 +23,11 @@ def env_bool(name: str, default: bool = False) -> bool:
 
 SECRET_KEY = env("SECRET_KEY", "dev-only-change-me")
 DEBUG = env_bool("DEBUG", True)
-ALLOWED_HOSTS = [host.strip() for host in env("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")]
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in env("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    if host.strip()
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -126,7 +130,14 @@ SPECTACULAR_SETTINGS = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    origin.strip() for origin in env("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+    origin.strip()
+    for origin in env("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+    if origin.strip()
+]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    pattern.strip()
+    for pattern in env("CORS_ALLOWED_ORIGIN_REGEXES").split(",")
+    if pattern.strip()
 ]
 
 REDIS_URL = env("REDIS_URL", "redis://127.0.0.1:6379/0")
