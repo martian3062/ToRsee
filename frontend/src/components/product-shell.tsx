@@ -26,7 +26,7 @@ export function ProductShell({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="torsy-workspace min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex min-h-16 max-w-[1600px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" aria-label="ToRsy entry" className="shrink-0">

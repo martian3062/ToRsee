@@ -250,7 +250,7 @@ export function CommandCenter() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8 bg-slate-50 text-slate-800">
+    <main className="torsy-workspace mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8 bg-slate-50 text-slate-800">
       <header className="flex flex-col gap-3 border-b border-slate-200 pb-4 md:flex-row md:items-center md:justify-between">
         <div>
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold tracking-normal text-slate-900">

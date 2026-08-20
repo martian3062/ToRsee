@@ -10,30 +10,30 @@
 
 :root {
   color-scheme: dark;
-  --torsy-background: #0b100e;
-  --torsy-surface: #121a17;
-  --torsy-surface-subtle: #17211d;
-  --torsy-surface-raised: #1d2924;
-  --torsy-field: #101814;
-  --torsy-line: #32423b;
-  --torsy-ink: #edf3ed;
-  --torsy-muted: #9cac9f;
-  --torsy-accent: #5ee7b4;
-  --torsy-accent-deep: #11815f;
+  --torsy-background: #0b1128;
+  --torsy-surface: #131b38;
+  --torsy-surface-subtle: #182142;
+  --torsy-surface-raised: #202c57;
+  --torsy-field: #111936;
+  --torsy-line: #3e4e80;
+  --torsy-ink: #eff2ff;
+  --torsy-muted: #aab5d4;
+  --torsy-accent: #9eb3ff;
+  --torsy-accent-deep: #7484f2;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --torsy-background: #eef3f0;
+  --torsy-background: #edf4ff;
   --torsy-surface: #ffffff;
-  --torsy-surface-subtle: #f5f8f6;
-  --torsy-surface-raised: #e9f0ec;
-  --torsy-field: #f7f9fb;
-  --torsy-line: #d7e0da;
-  --torsy-ink: #17211d;
-  --torsy-muted: #56685d;
-  --torsy-accent: #0f9b74;
-  --torsy-accent-deep: #0a7557;
+  --torsy-surface-subtle: #f5f7ff;
+  --torsy-surface-raised: #e7edff;
+  --torsy-field: #f6f8ff;
+  --torsy-line: #c8d1ef;
+  --torsy-ink: #1c2750;
+  --torsy-muted: #58658f;
+  --torsy-accent: #7386f5;
+  --torsy-accent-deep: #5f6bd7;
 }
 
 * {
@@ -43,10 +43,14 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--torsy-background);
+  background: linear-gradient(135deg, #0a1028 0%, #16143a 52%, #11234b 100%);
   color: var(--torsy-ink);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 180ms ease, color 180ms ease;
+}
+
+html[data-theme="light"] body {
+  background: linear-gradient(135deg, #eaf6ff 0%, #f3efff 52%, #e4ebff 100%);
 }
 
 button,
@@ -496,6 +500,472 @@ html[data-theme="dark"] textarea::placeholder {
 html[data-theme="dark"] option {
   background: #101814;
   color: #edf3ed;
+}
+
+/* Blue-violet product palette */
+.torsy-brand-icon {
+  border-color: #aebcff;
+  background: linear-gradient(135deg, #8dbeff 0%, #9076f7 100%);
+  color: #121a46;
+}
+
+.torsy-workspace {
+  background: linear-gradient(135deg, #0c1430 0%, #171542 52%, #172c58 100%);
+}
+
+.torsy-entry {
+  background: #0a102b;
+  color: #f4f6ff;
+}
+
+.entry-overlay {
+  background: linear-gradient(120deg, rgba(7, 12, 39, 0.76) 0%, rgba(28, 23, 73, 0.58) 100%);
+}
+
+.entry-image {
+  filter: hue-rotate(22deg) saturate(0.8);
+}
+
+.torsy-entry .torsy-brand-name {
+  color: #ffffff;
+}
+
+.torsy-entry .torsy-brand-subtitle {
+  color: #d2d9ff;
+}
+
+.entry-console-link,
+.entry-secondary {
+  border-color: rgba(220, 226, 255, 0.4);
+  background: rgba(14, 20, 59, 0.48);
+  color: #f4f6ff;
+}
+
+.entry-console-link:hover,
+.entry-secondary:hover {
+  border-color: #e8ecff;
+  background: #edf1ff;
+  color: #171d4a;
+}
+
+.entry-kicker {
+  border-color: rgba(167, 185, 255, 0.7);
+  background: rgba(145, 126, 255, 0.15);
+  color: #dbe4ff;
+}
+
+.entry-title {
+  color: #ffffff;
+}
+
+.entry-copy {
+  color: #d8e0ff;
+}
+
+.entry-primary {
+  background: linear-gradient(135deg, #78c1ff 0%, #8c78f4 100%);
+  color: #11163b;
+  box-shadow: 0 16px 32px rgba(5, 10, 40, 0.34);
+}
+
+.entry-primary:hover {
+  background: linear-gradient(135deg, #9bd3ff 0%, #aa96ff 100%);
+}
+
+.entry-nav {
+  border-top-color: rgba(220, 226, 255, 0.28);
+}
+
+.entry-nav-link {
+  border-bottom-color: rgba(220, 226, 255, 0.2);
+  color: #f4f6ff;
+}
+
+.entry-nav-link:hover {
+  background: rgba(141, 126, 255, 0.14);
+  color: #c9d6ff;
+}
+
+.entry-nav-icon {
+  color: #9fb4ff;
+}
+
+html[data-theme="light"] .torsy-workspace {
+  background: linear-gradient(135deg, #eaf6ff 0%, #f4efff 52%, #e3eaff 100%);
+}
+
+html[data-theme="light"] .torsy-entry {
+  background: #edf4ff;
+  color: #1d2855;
+}
+
+html[data-theme="light"] .torsy-entry .entry-image {
+  opacity: 0.24;
+  filter: saturate(0.8) contrast(0.9) hue-rotate(18deg);
+}
+
+html[data-theme="light"] .entry-overlay {
+  background: linear-gradient(120deg, rgba(235, 246, 255, 0.92) 0%, rgba(244, 238, 255, 0.84) 100%);
+}
+
+html[data-theme="light"] .torsy-entry .torsy-brand-name,
+html[data-theme="light"] .entry-title {
+  color: #1d2855;
+}
+
+html[data-theme="light"] .torsy-entry .torsy-brand-subtitle {
+  color: #5c6998;
+}
+
+html[data-theme="light"] .entry-console-link,
+html[data-theme="light"] .entry-secondary {
+  border-color: #9eabda;
+  background: rgba(255, 255, 255, 0.72);
+  color: #1d2855;
+}
+
+html[data-theme="light"] .entry-console-link:hover,
+html[data-theme="light"] .entry-secondary:hover {
+  border-color: #7182ed;
+  background: linear-gradient(135deg, #7dbdff 0%, #8976ee 100%);
+  color: #ffffff;
+}
+
+html[data-theme="light"] .entry-kicker {
+  border-color: #9eabda;
+  background: rgba(124, 135, 242, 0.1);
+  color: #4d5eb8;
+}
+
+html[data-theme="light"] .entry-copy {
+  color: #49588a;
+}
+
+html[data-theme="light"] .entry-primary {
+  background: linear-gradient(135deg, #77baff 0%, #8974ee 100%);
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(83, 91, 181, 0.2);
+}
+
+html[data-theme="light"] .entry-primary:hover {
+  background: linear-gradient(135deg, #61a7f6 0%, #725bdc 100%);
+}
+
+html[data-theme="light"] .entry-nav {
+  border-top-color: #b4c2e7;
+}
+
+html[data-theme="light"] .entry-nav-link {
+  border-bottom-color: #d2dbf1;
+  color: #1d2855;
+}
+
+html[data-theme="light"] .entry-nav-link:hover {
+  background: rgba(124, 135, 242, 0.08);
+  color: #5263ca;
+}
+
+html[data-theme="light"] .entry-nav-icon {
+  color: #7182ed;
+}
+
+html[data-theme="dark"] .bg-white {
+  background-color: #131b38;
+}
+
+html[data-theme="dark"] .bg-slate-50,
+html[data-theme="dark"] [class~="bg-slate-50/70"] {
+  background-color: #182142;
+}
+
+html[data-theme="dark"] .bg-slate-100 {
+  background-color: #202c58;
+}
+
+html[data-theme="dark"] .bg-slate-200 {
+  background-color: #2a386a;
+}
+
+html[data-theme="dark"] .bg-slate-800,
+html[data-theme="dark"] .bg-slate-900,
+html[data-theme="dark"] [class~="bg-slate-900/80"] {
+  background-color: #0e1633;
+}
+
+html[data-theme="dark"] .bg-slate-950,
+html[data-theme="dark"] [class~="bg-slate-950/60"] {
+  background-color: #080d22;
+}
+
+html[data-theme="dark"] .border-slate-100,
+html[data-theme="dark"] .border-slate-150 {
+  border-color: #2c3968;
+}
+
+html[data-theme="dark"] .border-slate-200,
+html[data-theme="dark"] [class~="border-slate-200/60"],
+html[data-theme="dark"] [class~="border-slate-200/80"] {
+  border-color: #3e4e80;
+}
+
+html[data-theme="dark"] .border-slate-300 {
+  border-color: #596b9f;
+}
+
+html[data-theme="dark"] .divide-slate-100 > :not(:last-child),
+html[data-theme="dark"] .divide-slate-150 > :not(:last-child),
+html[data-theme="dark"] .divide-slate-200 > :not(:last-child) {
+  border-color: #3e4e80;
+}
+
+html[data-theme="dark"] .text-slate-950,
+html[data-theme="dark"] .text-slate-900 {
+  color: #f0f3ff;
+}
+
+html[data-theme="dark"] .text-slate-850,
+html[data-theme="dark"] .text-slate-800 {
+  color: #dbe2ff;
+}
+
+html[data-theme="dark"] .text-slate-700 {
+  color: #c3cdee;
+}
+
+html[data-theme="dark"] .text-slate-650,
+html[data-theme="dark"] .text-slate-600 {
+  color: #aebbdc;
+}
+
+html[data-theme="dark"] .text-slate-550,
+html[data-theme="dark"] .text-slate-500 {
+  color: #94a2ca;
+}
+
+html[data-theme="dark"] .text-slate-400 {
+  color: #7e8db7;
+}
+
+html[data-theme="dark"] .text-slate-300,
+html[data-theme="dark"] .text-slate-200,
+html[data-theme="dark"] .text-slate-100 {
+  color: #dbe2ff;
+}
+
+html[data-theme="dark"] .bg-emerald-50,
+html[data-theme="dark"] [class~="bg-emerald-50/50"],
+html[data-theme="dark"] [class~="bg-emerald-50/55"],
+html[data-theme="dark"] [class~="bg-emerald-300/10"] {
+  background-color: #192550;
+}
+
+html[data-theme="dark"] .bg-emerald-100 {
+  background-color: #25346d;
+}
+
+html[data-theme="dark"] .bg-emerald-200 {
+  background-color: #394a99;
+}
+
+html[data-theme="dark"] .bg-emerald-300 {
+  background-color: #7486ec;
+}
+
+html[data-theme="dark"] .bg-emerald-400 {
+  background-color: #90a7ff;
+}
+
+html[data-theme="dark"] .bg-emerald-500,
+html[data-theme="dark"] .bg-emerald-600 {
+  background-color: #6f80ee;
+}
+
+html[data-theme="dark"] .bg-emerald-700 {
+  background-color: #5b68cf;
+}
+
+html[data-theme="dark"] .bg-emerald-800 {
+  background-color: #4752ac;
+}
+
+html[data-theme="dark"] .border-emerald-100,
+html[data-theme="dark"] .border-emerald-200,
+html[data-theme="dark"] [class~="border-emerald-300/35"],
+html[data-theme="dark"] [class~="border-emerald-300/70"] {
+  border-color: #495bab;
+}
+
+html[data-theme="dark"] .border-emerald-500,
+html[data-theme="dark"] .border-emerald-600,
+html[data-theme="dark"] [class~="focus:border-emerald-600"]:focus {
+  border-color: #91a5ff;
+}
+
+html[data-theme="dark"] [class~="focus:ring-emerald-500"]:focus {
+  --tw-ring-color: #91a5ff;
+}
+
+html[data-theme="dark"] .text-emerald-950,
+html[data-theme="dark"] .text-emerald-900,
+html[data-theme="dark"] .text-emerald-800 {
+  color: #d6dfff;
+}
+
+html[data-theme="dark"] .text-emerald-700,
+html[data-theme="dark"] .text-emerald-600 {
+  color: #a9b9ff;
+}
+
+html[data-theme="dark"] .text-emerald-500 {
+  color: #8e9ff4;
+}
+
+html[data-theme="dark"] .text-emerald-300,
+html[data-theme="dark"] .text-emerald-200 {
+  color: #c9d4ff;
+}
+
+html[data-theme="dark"] .text-emerald-100 {
+  color: #edf0ff;
+}
+
+html[data-theme="dark"] .bg-cyan-50 {
+  background-color: #1b2860;
+}
+
+html[data-theme="dark"] .border-cyan-200 {
+  border-color: #6278de;
+}
+
+html[data-theme="dark"] .text-cyan-800 {
+  color: #c1ceff;
+}
+
+html[data-theme="dark"] [class~="hover:bg-emerald-200"]:hover {
+  background-color: #a4b4ff;
+}
+
+html[data-theme="dark"] [class~="hover:border-emerald-600"]:hover {
+  border-color: #a4b4ff;
+}
+
+html[data-theme="dark"] [class~="hover:text-emerald-200"]:hover {
+  color: #d7dfff;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #8494c6;
+}
+
+html[data-theme="dark"] option {
+  background: #111936;
+  color: #eff2ff;
+}
+
+html[data-theme="dark"] .torsy-brand-icon {
+  color: #121a46;
+}
+
+html[data-theme="light"] .bg-emerald-50,
+html[data-theme="light"] [class~="bg-emerald-50/50"],
+html[data-theme="light"] [class~="bg-emerald-50/55"],
+html[data-theme="light"] [class~="bg-emerald-300/10"] {
+  background-color: #eef1ff;
+}
+
+html[data-theme="light"] .bg-emerald-100 {
+  background-color: #e1e6ff;
+}
+
+html[data-theme="light"] .bg-emerald-200 {
+  background-color: #ccd5ff;
+}
+
+html[data-theme="light"] .bg-emerald-300 {
+  background-color: #b5c2ff;
+}
+
+html[data-theme="light"] .bg-emerald-400 {
+  background-color: #9eafff;
+}
+
+html[data-theme="light"] .bg-emerald-500,
+html[data-theme="light"] .bg-emerald-600 {
+  background-color: #7281ed;
+}
+
+html[data-theme="light"] .bg-emerald-700 {
+  background-color: #5d68cc;
+}
+
+html[data-theme="light"] .bg-emerald-800 {
+  background-color: #4c55a8;
+}
+
+html[data-theme="light"] .border-emerald-100,
+html[data-theme="light"] .border-emerald-200,
+html[data-theme="light"] [class~="border-emerald-300/35"],
+html[data-theme="light"] [class~="border-emerald-300/70"] {
+  border-color: #b4c0ef;
+}
+
+html[data-theme="light"] .border-emerald-500,
+html[data-theme="light"] .border-emerald-600,
+html[data-theme="light"] [class~="focus:border-emerald-600"]:focus {
+  border-color: #7383e8;
+}
+
+html[data-theme="light"] [class~="focus:ring-emerald-500"]:focus {
+  --tw-ring-color: #7383e8;
+}
+
+html[data-theme="light"] .text-emerald-950,
+html[data-theme="light"] .text-emerald-900,
+html[data-theme="light"] .text-emerald-800 {
+  color: #4250aa;
+}
+
+html[data-theme="light"] .text-emerald-700,
+html[data-theme="light"] .text-emerald-600 {
+  color: #5364c8;
+}
+
+html[data-theme="light"] .text-emerald-500 {
+  color: #697ceb;
+}
+
+html[data-theme="light"] .text-emerald-300,
+html[data-theme="light"] .text-emerald-200 {
+  color: #5c6aca;
+}
+
+html[data-theme="light"] .text-emerald-100 {
+  color: #edf0ff;
+}
+
+html[data-theme="light"] .bg-cyan-50 {
+  background-color: #edf0ff;
+}
+
+html[data-theme="light"] .border-cyan-200 {
+  border-color: #bac4ef;
+}
+
+html[data-theme="light"] .text-cyan-800 {
+  color: #5364c8;
+}
+
+html[data-theme="light"] [class~="hover:bg-emerald-200"]:hover {
+  background-color: #c8d2ff;
+}
+
+html[data-theme="light"] [class~="hover:border-emerald-600"]:hover {
+  border-color: #6978df;
+}
+
+html[data-theme="light"] [class~="hover:text-emerald-200"]:hover {
+  color: #5867cd;
 }
 
 @keyframes torsy-loader-pulse {
