@@ -2,12 +2,17 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { AppProviders } from "@/components/app-providers";
+import { ProductLoader } from "@/components/product-loader";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ToRsy",
-  description: "The Buddy in the Dark",
+  metadataBase: new URL("https://torsy.vercel.app"),
+  title: {
+    default: "ToRsy | The Buddy in the Dark",
+    template: "%s | ToRsy",
+  },
+  description: "Governed intelligence and continuous monitoring for encrypted-platform investigations.",
 };
 
 // Swallows errors injected by browser wallet extensions (MetaMask et al.) so the
@@ -44,7 +49,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en">
       <body>
         <script dangerouslySetInnerHTML={{ __html: suppressExtensionErrors }} />
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <ProductLoader />
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

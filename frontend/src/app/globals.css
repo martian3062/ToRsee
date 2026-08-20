@@ -21,9 +21,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(239, 246, 245, 0.8), rgba(244, 247, 250, 0.95)),
-    #eef3f5;
+  background: #eef3f5;
   color: #18212f;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -33,4 +31,41 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+@keyframes torsy-loader-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.torsy-loader-mark {
+  animation: torsy-loader-pulse 1s ease-in-out infinite;
+}
+
+.route-loader {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.route-loader[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.entry-image {
+  object-position: center;
+}
+
+@media (min-width: 1024px) {
+  .entry-image {
+    object-position: center right;
+  }
 }
